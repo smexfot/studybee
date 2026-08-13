@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>StudyBee 🐝 | Portal Login</title>
+    
+    <link rel="icon" href="https://i.ibb.co/yF4mhNPB/f493d534-fbf8-4b31-b741-83b343f8a9e1.jpg" type="image/jpeg">  
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- 🛡️ ANTI-INSPECT / DEVTOOLS BLOCKER 🛡️ -->
+    <script>
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.onkeydown = function (e) {
+            if (e.keyCode == 123) return false; 
+            if (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) return false; 
+            if (e.ctrlKey && (e.keyCode == 85)) return false; 
+        };
+        setInterval(function() {
+            var startTime = performance.now();
+            debugger; 
+            var endTime = performance.now();
+            if (endTime - startTime > 100) {
+                document.body.innerHTML = "<div style='background:#03040a;color:#ef4444;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:sans-serif;font-size:1.5rem;font-weight:900;text-transform:uppercase;letter-spacing:0.1em;text-align:center;padding:20px;'>⚠️ Security Alert <br><span style='color:#78716c;font-size:1rem;margin-top:10px;'>Developer Tools Detected. Access Blocked.</span></div>";
+                document.body.style.overflow = "hidden";
+            }
+        }, 100);
+    </script>
+
+    <style>
+        body { font-family: 'DM Sans', sans-serif; background-color: #03040a; color: #d6d3d1; -webkit-tap-highlight-color: transparent; overflow: hidden; }
+        h1, h2, h3, .font-syne { font-family: 'Syne', sans-serif; }
+        
+        /* Premium Red Hex Pattern */
+        .bg-hex { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100'%3E%3Cpath d='M28 66L0 50V18L28 2l28 16v32z' fill='none' stroke='rgba(220,38,38,0.04)' stroke-width='1'/%3E%3Cpath d='M28 100L0 84V52l28-16 28 16v32z' fill='none' stroke='rgba(220,38,38,0.025)' stroke-width='1'/%3E%3C/svg%3E"); }
+        
+        .glass-panel { background: rgba(18,16,24,0.75); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.06); box-shadow: 0 30px 60px -15px rgba(0,0,0,0.6); }
+        .input-glow:focus-within { box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.3); border-color: rgba(220, 38, 38, 0.5); }
+        .btn-click-effect { transition: transform 0.15s ease-out; }
+        .btn-click-effect:active { transform: scale(0.96); }
+        .fade-in { animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        
+        @keyframes floatBlob { 0%,100%{transform:translateY(0) scale(1);} 50%{transform:translateY(-30px) scale(1.05);} }
+        .animate-float { animation: floatBlob 8s ease-in-out infinite; }
+        
+        /* Loading Spinner Red Theme */
+        .spinner { border: 3px solid rgba(239,68,68,0.2); border-left-color: #ef4444; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; display: inline-block; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="min-h-screen selection:bg-red-500/30 relative flex flex-col items-center justify-center p-4">
+
+    <!-- Ambient Red Background Glows -->
+    <div class="fixed inset-0 pointer-events-none bg-hex z-[-1]"></div>
+    <div class="fixed top-1/4 left-1/4 w-[400px] h-[400px] bg-red-600/10 rounded-full blur-[140px] pointer-events-none z-[-1] animate-float"></div>
+    <div class="fixed bottom-1/4 right-1/4 w-[350px] h-[350px] bg-rose-700/10 rounded-full blur-[140px] pointer-events-none z-[-1] animate-float" style="animation-delay: 2s;"></div>
+
+    <div id="custom-alert" class="fixed top-6 left-1/2 -translate-x-1/2 z- opacity-0 pointer-events-none transform -translate-y-4 w-11/12 max-w-md transition-all duration-300">
+        <div class="bg-stone-900/95 backdrop-blur-md text-white px-6 py-3.5 rounded-2xl shadow-2xl border border-stone-700 flex items-center gap-3">
+            <i data-lucide="bell" class="w-5 h-5 text-red-500 shrink-0"></i>
+            <span id="custom-alert-msg" class="text-sm font-bold tracking-wide"></span>
+        </div>
+    </div>
+
+    <div class="glass-panel w-full max-w-md rounded-[2rem] p-8 sm:p-10 relative overflow-hidden fade-in">
+        <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-red-500 to-rose-500"></div>
+        
+        <div class="flex justify-center mb-8">
+            <div class="relative group">
+                <div class="absolute inset-0 bg-red-500/20 rounded-full blur-xl group-hover:bg-red-500/30 transition-all duration-500"></div>
+                <img src="https://i.ibb.co/yF4mhNPB/f493d534-fbf8-4b31-b741-83b343f8a9e1.jpg" alt="Logo" class="relative h-16 w-16 rounded-full border border-red-500/30 shadow-[0_0_20px_rgba(220,38,38,0.3)]">
+            </div>
+        </div>
+
+        <div class="text-center mb-8">
+            <h1 class="font-syne text-3xl font-black text-white mb-2 tracking-tight">Welcome Back</h1>
+            <p class="text-stone-400 text-sm font-medium">Log in with your registered mobile number.</p>
+        </div>
+
+        <!-- Step 1: Mobile Form -->
+        <form id="mobile-form" onsubmit="event.preventDefault(); requestOTP();" class="space-y-5">
+            <div class="relative group">
+                <i data-lucide="phone" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-stone-500 group-focus-within:text-red-500 transition-colors"></i>
+                <input type="tel" id="mobile-input" pattern="[0-9]{10}" maxlength="10" placeholder="10-digit Mobile Number" required class="w-full bg-stone-950/80 border border-stone-800 text-white pl-12 pr-4 py-4 rounded-xl focus:outline-none input-glow transition-all text-sm font-bold tracking-widest placeholder:text-stone-600 shadow-inner">
+            </div>
+            <button type="submit" id="btn-send-otp" class="w-full bg-red-600 text-white font-black uppercase tracking-widest py-4 rounded-xl hover:bg-red-500 btn-click-effect shadow-[0_0_20px_rgba(220,38,38,0.3)] text-sm flex justify-center items-center gap-2 transition-colors">
+                Send OTP <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+        </form>
+
+        <!-- Step 2: OTP Form -->
+        <form id="otp-form" onsubmit="event.preventDefault(); verifyOTP();" class="space-y-5 hidden">
+            <div class="flex justify-between items-center px-1 mb-2">
+                <span class="text-xs font-bold text-stone-400 tracking-wider">Sent to <span id="display-number" class="text-red-500"></span></span>
+                <button type="button" onclick="resetForm()" class="text-[10px] uppercase font-black text-stone-500 hover:text-red-400 transition-colors">Change</button>
+            </div>
+            <div class="relative group">
+                <i data-lucide="lock" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-stone-500 group-focus-within:text-red-500 transition-colors"></i>
+                <input type="text" id="otp-input" pattern="[0-9]{6}" maxlength="6" placeholder="Enter 6-digit OTP" required class="w-full bg-stone-950/80 border border-stone-800 text-white pl-12 pr-4 py-4 rounded-xl focus:outline-none input-glow transition-all text-center text-lg font-black tracking-[0.5em] placeholder:text-stone-600 placeholder:tracking-normal shadow-inner">
+            </div>
+            <button type="submit" id="btn-verify-otp" class="w-full bg-red-600 text-white font-black uppercase tracking-widest py-4 rounded-xl hover:bg-red-500 btn-click-effect shadow-[0_0_20px_rgba(220,38,38,0.3)] text-sm flex justify-center items-center gap-2 transition-colors">
+                Verify & Secure Login <i data-lucide="shield-check" class="w-4 h-4"></i>
+            </button>
+        </form>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // 🔥 TERA NAYA WORKER URL 🔥
+        const WORKER_URL = "https://mj.iownprince5.workers.dev/"; 
+
+        let currentMobile = "";
+        let deviceId = localStorage.getItem('studybee_device_id') || ('dev_' + Math.random().toString(36).substring(2, 15));
+        localStorage.setItem('studybee_device_id', deviceId);
+
+        window.showAlert = function(msg, isError = false) {
+            const alertBox = document.getElementById('custom-alert');
+            document.getElementById('custom-alert-msg').innerText = msg;
+            alertBox.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-4');
+            alertBox.classList.add('opacity-100', 'translate-y-0');
+            setTimeout(() => {
+                alertBox.classList.add('opacity-0', 'pointer-events-none', '-translate-y-4');
+                alertBox.classList.remove('opacity-100', 'translate-y-0');
+            }, 3500);
+        }
+
+        window.requestOTP = async function() {
+            const input = document.getElementById('mobile-input').value.trim();
+            if(input.length !== 10) return showAlert("Enter valid 10-digit mobile number", true);
+
+            currentMobile = input;
+            const btn = document.getElementById('btn-send-otp');
+            btn.innerHTML = '<span class="spinner"></span>';
+            btn.disabled = true;
+
+            try {
+                // worker ke through check-user API hit
+                const response = await fetch(WORKER_URL, {
+                    method: 'POST',
+                    headers: { 
+                        'Target-Url': 'https://auth.nexttoppers.com/auth/check-user',
+                        'Content-Type': 'application/json' 
+                    },
+                    body: JSON.stringify({ mobile: currentMobile, device_id: deviceId, mobile_otp_login: 1, otp: "" })
+                });
+
+                const data = await response.json();
+                if(data.success) {
+                    showAlert("OTP Sent Successfully!");
+                    document.getElementById('mobile-form').classList.add('hidden');
+                    document.getElementById('display-number').innerText = "+91 " + currentMobile;
+                    document.getElementById('otp-form').classList.remove('hidden');
+                } else {
+                    showAlert(data.message || "Failed to send OTP", true);
+                }
+            } catch (error) {
+                showAlert("Network Error", true);
+            } finally {
+                btn.innerHTML = 'Send OTP <i data-lucide="arrow-right" class="w-4 h-4"></i>';
+                btn.disabled = false;
+            }
+        }
+
+        window.verifyOTP = async function() {
+            const otpInput = document.getElementById('otp-input').value.trim();
+            if(otpInput.length !== 6) return showAlert("Enter 6-digit OTP", true);
+
+            const btn = document.getElementById('btn-verify-otp');
+            btn.innerHTML = '<span class="spinner"></span>';
+            btn.disabled = true;
+
+            try {
+                const response = await fetch(WORKER_URL, {
+                    method: 'POST',
+                    headers: { 
+                        'Target-Url': 'https://auth.nexttoppers.com/auth/verify-otp',
+                        'Content-Type': 'application/json' 
+                    },
+                    body: JSON.stringify({ mobile: currentMobile, otp: otpInput, signup_needed: "0", device_id: deviceId })
+                });
+
+                const data = await response.json();
+                if(data.success && data.data && data.data.accessToken) {
+                    localStorage.setItem('studybee_access_token', data.data.accessToken);
+                    localStorage.setItem('studybee_user_id', data.data.id);
+                    localStorage.setItem('studybee_user_name', data.data.name || 'Student');
+                    window.location.href = 'index.html';
+                } else {
+                    showAlert(data.message || "Invalid OTP", true);
+                }
+            } catch (error) {
+                showAlert("Verification failed", true);
+            } finally {
+                btn.innerHTML = 'Verify & Secure Login <i data-lucide="shield-check" class="w-4 h-4"></i>';
+                btn.disabled = false;
+            }
+        }
+
+        window.resetForm = function() {
+            document.getElementById('otp-form').classList.add('hidden');
+            document.getElementById('mobile-form').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>

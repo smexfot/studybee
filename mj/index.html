@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>StudyBee 🐝 | Premium Batches</title>
+    
+    <link rel="icon" href="https://i.ibb.co/yF4mhNPB/f493d534-fbf8-4b31-b741-83b343f8a9e1.jpg" type="image/jpeg">  
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Syne:wght@600;700;800;900&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        themeBg: '#050505',
+                        cardBg: 'rgba(12, 12, 14, 0.75)',
+                        themeYellow: '#FACC15',
+                        themeAmber: '#F59E0B',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        syne: ['Syne', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { 
+            background-color: #050505; 
+            color: #e5e5e5; 
+            scroll-behavior: smooth; 
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .bg-ambient {
+            background: 
+                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(250, 204, 21, 0.08), transparent),
+                radial-gradient(ellipse 60% 40% at 100% 100%, rgba(245, 158, 11, 0.04), transparent),
+                #050505;
+        }
+        
+        .btn-click-effect { transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1); }
+        .btn-click-effect:active { transform: scale(0.92); }
+        
+        .premium-card {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .premium-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: rgba(250, 204, 21, 0.45);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 30px rgba(250, 204, 21, 0.15);
+            background: linear-gradient(145deg, rgba(28, 26, 18, 0.9), rgba(8, 8, 8, 0.95));
+        }
+        
+        .image-container::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.25) 50%, rgba(255,255,255,0) 100%);
+            transform: skewX(-25deg);
+            transition: all 0.7s ease;
+            z-index: 1;
+            pointer-events: none;
+        }
+        .premium-card:hover .image-container::after { left: 200%; }
+        
+        .fade-in-pop { 
+            animation: fadeInPop 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; 
+            opacity: 0;
+        }
+        @keyframes fadeInPop { 
+            0% { opacity: 0; transform: translateY(40px) scale(0.9); filter: blur(10px); } 
+            100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); } 
+        }
+        
+        .heart-bounce { animation: heartBounce 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        @keyframes heartBounce { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.5); } }
+        
+        .hide-scroll::-webkit-scrollbar { display: none; }
+        .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .nav-glass {
+            background: rgba(5, 5, 5, 0.8);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        
+        @keyframes shimmer { 100% { transform: translateX(100%); } }
+
+        /* Modal Animations */
+        .modal-glass {
+            background: rgba(10, 10, 12, 0.85);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(250, 204, 21, 0.2);
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(250, 204, 21, 0.05);
+        }
+        .animate-modal-in {
+            animation: modalIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        @keyframes modalIn {
+            0% { opacity: 0; transform: scale(0.9) translateY(20px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+    </style>
+</head>
+<body class="min-h-screen relative flex flex-col font-sans pb-12 bg-ambient">
+    
+    <!-- Navbar -->
+    <nav class="w-full z-40 nav-glass h-[80px] sticky top-0 shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
+        <div class="max-w-[90rem] mx-auto px-4 sm:px-6 h-full flex items-center justify-between">
+            <div class="flex items-center gap-3 cursor-pointer btn-click-effect group" onclick="window.location.reload()">
+                <div class="relative w-11 h-11 flex items-center justify-center">
+                    <div class="absolute inset-0 bg-themeYellow/30 rounded-xl group-hover:bg-themeYellow/50 transition-all duration-500 blur-md group-hover:blur-lg animate-pulse"></div>
+                    <div class="w-11 h-11 bg-black border border-themeYellow/50 rounded-xl flex items-center justify-center relative z-10 shadow-[0_0_20px_rgba(250,204,21,0.3)]">
+                        <img src="https://i.ibb.co/yF4mhNPB/f493d534-fbf8-4b31-b741-83b343f8a9e1.jpg" alt="Logo" class="w-7 h-7 rounded-md group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+                    </div>
+                </div>
+                <h1 class="text-2xl font-black tracking-[0.1em] text-white font-syne drop-shadow-lg">STUDY<span class="text-transparent bg-clip-text bg-gradient-to-r from-themeYellow to-themeAmber group-hover:brightness-125 transition-all">BEE</span></h1>
+            </div>
+            
+            <div class="hidden md:flex items-center gap-7">
+                <button onclick="switchTab('new')" class="relative overflow-hidden bg-gradient-to-r from-themeYellow to-themeAmber text-black px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest shadow-[0_0_20px_rgba(250,204,21,0.4)] hover:shadow-[0_0_30px_rgba(250,204,21,0.6)] hover:scale-105 transition-all flex items-center gap-2 btn-click-effect group">
+                    <span class="relative z-10 flex items-center gap-2"><i data-lucide="zap" class="w-4 h-4 fill-black"></i> Batches</span>
+                    <div class="absolute inset-0 h-full w-full bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:animate-[shimmer_1s_infinite] z-0"></div>
+                </button>
+                <button onclick="switchTab('wishlist')" class="text-stone-400 hover:text-white font-bold text-xs uppercase tracking-widest transition-colors flex items-center gap-2 group">
+                    <i data-lucide="heart" class="w-4 h-4 group-hover:text-themeYellow group-hover:fill-themeYellow group-hover:scale-110 transition-all"></i> Wishlist
+                </button>
+                <!-- NEW: Desktop Login/Logout Button -->
+                <button id="navAuthBtn" onclick="handleNavAuthClick()" class="ml-2 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest border border-white/10 hover:border-themeYellow transition-all btn-click-effect flex items-center gap-2 text-stone-400 hover:text-white group bg-white/5 hover:bg-white/10">
+                    <i data-lucide="log-in" id="navAuthIcon" class="w-4 h-4 group-hover:text-themeYellow transition-colors"></i> 
+                    <span id="navAuthText">Login</span>
+                </button>
+            </div>
+            
+            <div class="md:hidden flex items-center gap-3">
+                <!-- NEW: Mobile Login/Logout Button -->
+                <button id="mobileNavAuthBtn" onclick="handleNavAuthClick()" class="text-stone-400 p-2.5 border border-white/10 rounded-xl hover:text-white hover:border-themeYellow transition-colors btn-click-effect bg-white/5">
+                    <i data-lucide="log-in" id="mobileNavAuthIcon" class="w-5 h-5"></i>
+                </button>
+                <button onclick="switchTab('wishlist')" class="text-themeYellow p-2.5 bg-themeYellow/10 border border-themeYellow/20 rounded-xl hover:bg-themeYellow/20 transition-colors btn-click-effect relative shadow-[0_0_15px_rgba(250,204,21,0.2)]">
+                    <i data-lucide="heart" class="w-5 h-5"></i>
+                    <span id="mobile-wishlist-indicator" class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 border-2 border-black rounded-full hidden animate-pulse"></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-1 w-full max-w-[90rem] mx-auto px-4 sm:px-6 pt-10 relative z-10">
+        
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-10 fade-in-pop" style="animation-delay: 100ms;">
+            
+            <div class="flex items-center gap-2 overflow-x-auto hide-scroll w-full md:w-auto pb-2 md:pb-0 relative bg-black/40 p-1.5 rounded-2xl border border-white/5 backdrop-blur-md">
+                <button id="tab-new" onclick="switchTab('new')" class="tab-btn active shrink-0 px-6 py-2.5 rounded-xl text-sm font-bold transition-all bg-white/10 text-white border border-white/20 shadow-[0_0_20px_rgba(255,255,255,0.05)] relative z-10">
+                    New Batches
+                </button>
+                <button id="tab-old" onclick="switchTab('old')" class="tab-btn shrink-0 px-6 py-2.5 rounded-xl text-sm font-bold transition-all bg-transparent text-stone-500 hover:text-stone-200 border border-transparent relative z-10">
+                    Old Batches
+                </button>
+                <button id="tab-wishlist" onclick="switchTab('wishlist')" class="tab-btn shrink-0 px-6 py-2.5 rounded-xl text-sm font-bold transition-all bg-transparent text-stone-500 hover:text-stone-200 border border-transparent flex items-center gap-2 relative z-10">
+                    Wishlist <span id="wishlist-count" class="bg-gradient-to-r from-themeYellow to-themeAmber text-black text-[11px] font-black px-2 py-0.5 rounded-md shadow-sm hidden">0</span>
+                </button>
+            </div>
+            <div class="relative w-full md:w-[400px] group">
+                <div class="absolute -inset-0.5 bg-gradient-to-r from-themeYellow via-orange-500 to-themeYellow rounded-2xl blur opacity-25 group-focus-within:opacity-60 transition duration-500"></div>
+                <div class="relative w-full">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <i data-lucide="search" class="w-5 h-5 text-stone-500 group-focus-within:text-themeYellow transition-colors duration-300"></i>
+                    </div>
+                    <input type="text" id="searchInput" placeholder="Search premium batches..." 
+                        class="w-full bg-[#0a0a0c] border border-white/10 text-white text-base font-semibold rounded-2xl block pl-12 pr-12 py-3.5 transition-all placeholder:text-stone-600 focus:outline-none focus:border-themeYellow/50 shadow-inner">
+                    <button id="clearSearchBtn" onclick="clearSearch()" class="absolute inset-y-0 right-0 pr-4 flex items-center text-stone-500 hover:text-themeYellow hidden transition-colors">
+                        <i data-lucide="x-circle" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="loadingIndicator" class="flex flex-col items-center justify-center py-32">
+            <div class="relative w-16 h-16 mb-4">
+                <div class="absolute inset-0 rounded-full border-t-4 border-themeYellow animate-spin"></div>
+                <div class="absolute inset-2 rounded-full border-r-4 border-orange-500 animate-spin" style="animation-direction: reverse; animation-duration: 0.8s;"></div>
+            </div>
+            <p class="text-themeYellow font-bold tracking-widest uppercase text-xs animate-pulse">Fetching Data...</p>
+        </div>
+        <div id="batchGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-7 hidden">
+        </div>
+        <div id="loadMoreContainer" class="w-full flex justify-center mt-12 mb-8 hidden fade-in-pop">
+            <button id="loadMoreBtn" onclick="loadMore()" class="group relative px-10 py-3.5 bg-zinc-950 border border-themeYellow/30 hover:border-themeYellow rounded-full text-white font-black text-xs uppercase tracking-widest transition-all duration-300 overflow-hidden shadow-[0_0_15px_rgba(250,204,21,0.1)] hover:shadow-[0_0_25px_rgba(250,204,21,0.3)] hover:-translate-y-1 btn-click-effect">
+                <span class="relative z-10 flex items-center gap-2">
+                    Show More <i data-lucide="chevron-down" class="w-4 h-4 group-hover:translate-y-1 transition-transform"></i>
+                </span>
+                <div class="absolute inset-0 h-full w-full bg-gradient-to-b from-themeYellow/0 via-themeYellow/10 to-themeYellow/0 -translate-y-full group-hover:animate-[shimmer_1.5s_infinite] rotate-90"></div>
+            </button>
+        </div>
+        <div id="emptyState" class="hidden flex-col items-center justify-center py-24 text-center fade-in-pop">
+            <div class="w-24 h-24 bg-zinc-900/50 rounded-3xl flex items-center justify-center mb-6 border border-white/5 shadow-[0_0_40px_rgba(255,255,255,0.02)] relative overflow-hidden group">
+                <div class="absolute inset-0 bg-themeYellow/5 group-hover:bg-themeYellow/15 transition-colors duration-500"></div>
+                <i data-lucide="ghost" class="w-12 h-12 text-stone-600 relative z-10 group-hover:animate-bounce group-hover:text-themeYellow transition-colors"></i>
+            </div>
+            <h3 class="text-2xl font-black text-white mb-2 tracking-wide">No Batches Found</h3>
+            <p class="text-stone-500 text-sm max-w-sm font-medium">Try adjusting your search or checking another tab.</p>
+        </div>
+    </main>
+
+    <!-- Authenticaton Modal -->
+    <div id="authModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity" onclick="closeAuthModal()"></div>
+        
+        <!-- Modal Content -->
+        <div class="modal-glass w-full max-w-md rounded-3xl p-8 relative z-10 animate-modal-in overflow-hidden">
+            <!-- Glow Effect -->
+            <div class="absolute -top-20 -right-20 w-40 h-40 bg-themeYellow/20 rounded-full blur-[50px] pointer-events-none"></div>
+            
+            <button onclick="closeAuthModal()" class="absolute top-5 right-5 text-stone-500 hover:text-white transition-colors bg-white/5 rounded-full p-2 border border-white/5">
+                <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+
+            <div class="text-center mb-8 relative z-10">
+                <div class="w-16 h-16 bg-black border border-themeYellow/30 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-[0_0_20px_rgba(250,204,21,0.2)]">
+                    <i data-lucide="shield-check" class="w-8 h-8 text-themeYellow"></i>
+                </div>
+                <h2 class="text-2xl font-black text-white font-syne tracking-wide">Secure Login</h2>
+                <p class="text-stone-400 text-sm mt-1" id="authStatusText">Enter mobile to access premium content</p>
+            </div>
+
+            <!-- Step 1: Mobile -->
+            <div id="authStep1" class="relative z-10">
+                <div class="relative mb-5">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <i data-lucide="smartphone" class="w-5 h-5 text-stone-500"></i>
+                    </div>
+                    <input type="number" id="mobileInput" placeholder="Mobile Number" 
+                        class="w-full bg-[#050505] border border-white/10 text-white font-bold rounded-xl block pl-12 pr-4 py-4 transition-all placeholder:text-stone-600 focus:outline-none focus:border-themeYellow/50 focus:ring-1 focus:ring-themeYellow/50 shadow-inner">
+                </div>
+                <button onclick="sendAuthOTP()" id="sendOtpBtn" class="w-full bg-gradient-to-r from-themeYellow to-themeAmber text-black font-black py-4 rounded-xl uppercase tracking-widest text-sm hover:shadow-[0_0_20px_rgba(250,204,21,0.4)] transition-all btn-click-effect flex justify-center items-center gap-2">
+                    Send OTP <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+            </div>
+
+            <!-- Step 2: OTP -->
+            <div id="authStep2" class="relative z-10 hidden">
+                <div class="relative mb-5">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <i data-lucide="key-round" class="w-5 h-5 text-stone-500"></i>
+                    </div>
+                    <input type="number" id="otpInput" placeholder="Enter 6-digit OTP" 
+                        class="w-full bg-[#050505] border border-white/10 text-white font-bold tracking-[0.2em] rounded-xl block pl-12 pr-4 py-4 transition-all placeholder:text-stone-600 focus:outline-none focus:border-themeYellow/50 focus:ring-1 focus:ring-themeYellow/50 shadow-inner text-center">
+                </div>
+                <button onclick="verifyAuthOTP()" id="verifyOtpBtn" class="w-full bg-gradient-to-r from-themeYellow to-themeAmber text-black font-black py-4 rounded-xl uppercase tracking-widest text-sm hover:shadow-[0_0_20px_rgba(250,204,21,0.4)] transition-all btn-click-effect flex justify-center items-center gap-2">
+                    Verify & Proceed <i data-lucide="unlock" class="w-4 h-4"></i>
+                </button>
+                <button onclick="resetAuth()" class="w-full text-center text-stone-500 text-xs font-bold uppercase tracking-wider mt-4 hover:text-white transition-colors">
+                    Change Mobile Number
+                </button>
+            </div>
+
+            <!-- Alert Box -->
+            <div id="authAlert" class="mt-4 p-3 rounded-lg hidden text-xs font-bold text-center border"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+        // UPDATED: Imported Firestore instead of Realtime Database
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDsNFbOzohDyLafwd5-PINSmmY94QzCAyw",
+            authDomain: "teamspiral-bd113.firebaseapp.com",
+            databaseURL: "https://teamspiral-bd113-default-rtdb.asia-southeast1.firebasedatabase.app", // Keeps DB URL but we use Firestore now
+            projectId: "teamspiral-bd113",
+            storageBucket: "teamspiral-bd113.firebasestorage.app",
+            messagingSenderId: "1034019657865",
+            appId: "1:1034019657865:web:b2681061ca8ff9c23c8e58"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // UPDATED: Saving to Firestore Database
+        window.saveUserToFirebase = async (mobile, token) => {
+            try {
+                // Creates or updates a document in 'users' collection with the mobile number as ID
+                const userRef = doc(db, 'users', mobile);
+                await setDoc(userRef, {
+                    mobile: mobile,
+                    accessToken: token,
+                    lastLogin: new Date().toISOString()
+                }, { merge: true }); // merge: true ensures we don't overwrite other existing data
+                console.log("✅ User data saved to Firestore successfully.");
+            } catch (error) {
+                console.error("❌ Firestore save error:", error);
+            }
+        };
+    </script>
+
+    <script>
+        lucide.createIcons();
+
+        // --- AUTHENTICATION STATE & LOGIC ---
+        const API_BASE = "https://f.khatikgaurav38.workers.dev";
+        const DEVICE_ID = "6cfad26f-4619-4c90-9dc9-37e616bc3e7b"; // From your context
+        let pendingTargetBatchId = null;
+
+        // NEW: Function to manage Login/Logout button UI
+        function updateAuthStateUI() {
+            const token = localStorage.getItem('studybee_token');
+            const navText = document.getElementById('navAuthText');
+            const navIcon = document.getElementById('navAuthIcon');
+            const mobileIcon = document.getElementById('mobileNavAuthIcon');
+            
+            if (token) {
+                if (navText) navText.innerText = "Logout";
+                if (navIcon) navIcon.setAttribute('data-lucide', 'log-out');
+                if (mobileIcon) mobileIcon.setAttribute('data-lucide', 'log-out');
+            } else {
+                if (navText) navText.innerText = "Login";
+                if (navIcon) navIcon.setAttribute('data-lucide', 'log-in');
+                if (mobileIcon) mobileIcon.setAttribute('data-lucide', 'log-in');
+            }
+            lucide.createIcons();
+        }
+
+        // NEW: Handle clicking the nav Login/Logout button
+        window.handleNavAuthClick = function() {
+            const token = localStorage.getItem('studybee_token');
+            if (token) {
+                // Logout logic
+                localStorage.removeItem('studybee_token');
+                localStorage.removeItem('studybee_mobile');
+                updateAuthStateUI();
+                
+                // Visual feedback for logout
+                const btn = document.getElementById('navAuthBtn');
+                if(btn) {
+                    btn.classList.add('bg-red-500/20', 'border-red-500', 'text-red-400');
+                    setTimeout(() => btn.classList.remove('bg-red-500/20', 'border-red-500', 'text-red-400'), 1000);
+                }
+            } else {
+                // Login logic (Standalone, no target batch)
+                pendingTargetBatchId = null;
+                document.getElementById('authModal').classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            }
+        };
+
+        function showAuthAlert(msg, isError = false) {
+            const alertBox = document.getElementById('authAlert');
+            alertBox.classList.remove('hidden', 'bg-red-900/30', 'border-red-500/50', 'text-red-400', 'bg-green-900/30', 'border-green-500/50', 'text-green-400');
+            
+            if (isError) {
+                alertBox.classList.add('bg-red-900/30', 'border-red-500/50', 'text-red-400');
+            } else {
+                alertBox.classList.add('bg-green-900/30', 'border-green-500/50', 'text-green-400');
+            }
+            alertBox.innerText = msg;
+        }
+
+        // Handle the "Let's Study" Button Click
+        window.handleStudyClick = function(event, batchId) {
+            event.preventDefault();
+            const token = localStorage.getItem('studybee_token');
+            
+            if (token) {
+                // Already Logged In -> Proceed directly
+                window.location.href = `content.html?id=${batchId}`;
+            } else {
+                // Not Logged In -> Open Modal
+                pendingTargetBatchId = batchId;
+                document.getElementById('authModal').classList.remove('hidden');
+                document.body.style.overflow = 'hidden'; // Prevent scrolling
+            }
+        };
+
+        window.closeAuthModal = function() {
+            document.getElementById('authModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+            resetAuth();
+        };
+
+        window.resetAuth = function() {
+            document.getElementById('authStep1').classList.remove('hidden');
+            document.getElementById('authStep2').classList.add('hidden');
+            document.getElementById('authAlert').classList.add('hidden');
+            document.getElementById('mobileInput').value = '';
+            document.getElementById('otpInput').value = '';
+            document.getElementById('authStatusText').innerText = "Enter mobile to access premium content";
+        };
+
+        window.sendAuthOTP = async function() {
+            const mobile = document.getElementById('mobileInput').value;
+            if (!mobile || mobile.length < 10) {
+                return showAuthAlert("Please enter a valid 10-digit mobile number.", true);
+            }
+
+            const btn = document.getElementById('sendOtpBtn');
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Sending...`;
+            btn.disabled = true;
+            lucide.createIcons();
+
+            try {
+                const res = await fetch(`${API_BASE}/api/check-user`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        mobile: mobile,
+                        device_id: DEVICE_ID,
+                        mobile_otp_login: 1,
+                        otp: ""
+                    })
+                });
+                
+                const data = await res.json();
+                
+                if (data.success) {
+                    document.getElementById('authStep1').classList.add('hidden');
+                    document.getElementById('authStep2').classList.remove('hidden');
+                    document.getElementById('authStatusText').innerText = `OTP sent to +91 ${mobile}`;
+                    showAuthAlert("OTP Sent Successfully!");
+                } else {
+                    showAuthAlert(data.message || "Failed to send OTP", true);
+                }
+            } catch (err) {
+                showAuthAlert("Network Error. Please try again.", true);
+            } finally {
+                btn.innerHTML = originalHtml;
+                btn.disabled = false;
+                lucide.createIcons();
+            }
+        };
+
+        window.verifyAuthOTP = async function() {
+            const mobile = document.getElementById('mobileInput').value;
+            const otp = document.getElementById('otpInput').value;
+            
+            if (!otp || otp.length < 4) {
+                return showAuthAlert("Please enter a valid OTP.", true);
+            }
+
+            const btn = document.getElementById('verifyOtpBtn');
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Verifying...`;
+            btn.disabled = true;
+            lucide.createIcons();
+
+            try {
+                const res = await fetch(`${API_BASE}/api/verify-otp`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        mobile: mobile,
+                        otp: otp,
+                        signup_needed: "0",
+                        device_id: DEVICE_ID
+                    })
+                });
+                
+                const data = await res.json();
+                
+                if (data.success && data.data && data.data.accessToken) {
+                    const token = data.data.accessToken;
+                    showAuthAlert("Login Successful! Redirecting...");
+                    
+                    // 1. Save Token to LocalStorage
+                    localStorage.setItem('studybee_token', token);
+                    localStorage.setItem('studybee_mobile', mobile);
+
+                    // 2. Save to Firebase (calling the global function from module)
+                    if (window.saveUserToFirebase) {
+                        await window.saveUserToFirebase(mobile, token);
+                    }
+                    
+                    // Update the UI Buttons
+                    updateAuthStateUI();
+                    
+                    // 3. Redirect to content OR just close modal if logged in via Nav
+                    setTimeout(() => {
+                        if (pendingTargetBatchId) {
+                            window.location.href = `content.html?id=${pendingTargetBatchId}`;
+                        } else {
+                            closeAuthModal();
+                        }
+                    }, 1000);
+
+                } else {
+                    showAuthAlert(data.message || "Invalid OTP", true);
+                }
+            } catch (err) {
+                showAuthAlert("Network Error. Please try again.", true);
+            } finally {
+                btn.innerHTML = originalHtml;
+                btn.disabled = false;
+                lucide.createIcons();
+            }
+        };
+
+        // --- BATCH RENDERING & CORE LOGIC ---
+        let batchesData = { new: [], old: [] };
+        let currentTab = 'new';
+        let wishlist = JSON.parse(localStorage.getItem('studybee_wishlist') || '[]').map(String);
+
+        const ITEMS_PER_PAGE = 5;
+        let currentlyDisplayedCount = 0;
+        let currentFilteredData = [];
+
+        const batchGrid = document.getElementById('batchGrid');
+        const searchInput = document.getElementById('searchInput');
+        const clearSearchBtn = document.getElementById('clearSearchBtn');
+        const emptyState = document.getElementById('emptyState');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const loadMoreContainer = document.getElementById('loadMoreContainer');
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateAuthStateUI(); // NEW: Check login state on load
+            updateWishlistCount();
+            fetchBatches();
+        });
+
+        async function fetchBatches() {
+            try {
+                const response = await fetch('batches.json');
+                if (!response.ok) throw new Error("Failed to load JSON");
+                batchesData = await response.json();
+                
+                loadingIndicator.classList.add('hidden');
+                batchGrid.classList.remove('hidden');
+                applyFiltersAndRender(true);
+            } catch (error) {
+                console.error("Error fetching batches:", error);
+                loadingIndicator.innerHTML = `
+                    <div class="text-center bg-red-950/50 border border-red-500/30 p-6 rounded-2xl backdrop-blur-md">
+                        <i data-lucide="alert-triangle" class="w-10 h-10 text-red-500 mx-auto mb-3"></i>
+                        <p class="text-red-400 font-bold text-lg">Failed to load batches.json</p>
+                        <p class="text-red-200/50 text-sm mt-1">Make sure you are running on a local server and batches.json exists.</p>
+                    </div>`;
+                lucide.createIcons();
+            }
+        }
+
+        searchInput.addEventListener('input', () => {
+            if (searchInput.value.length > 0) {
+                clearSearchBtn.classList.remove('hidden');
+            } else {
+                clearSearchBtn.classList.add('hidden');
+            }
+            applyFiltersAndRender(true);
+        });
+
+        function clearSearch() {
+            searchInput.value = '';
+            clearSearchBtn.classList.add('hidden');
+            applyFiltersAndRender(true);
+            searchInput.focus();
+        }
+
+        window.switchTab = function(tabName) {
+            currentTab = tabName;
+            searchInput.value = '';
+            clearSearchBtn.classList.add('hidden');
+            
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-white/10', 'text-white', 'border-white/20', 'shadow-[0_0_20px_rgba(255,255,255,0.05)]');
+                btn.classList.add('bg-transparent', 'text-stone-500', 'border-transparent');
+            });
+            
+            const activeTab = document.getElementById(`tab-${tabName}`);
+            activeTab.classList.remove('bg-transparent', 'text-stone-500', 'border-transparent');
+            activeTab.classList.add('bg-white/10', 'text-white', 'border-white/20', 'shadow-[0_0_20px_rgba(255,255,255,0.05)]');
+            applyFiltersAndRender(true);
+        };
+
+        function applyFiltersAndRender(resetPagination = false) {
+            const query = searchInput.value.toLowerCase().trim();
+            
+            if (currentTab === 'wishlist') {
+                const allBatches = [...(batchesData.new || []), ...(batchesData.old || [])];
+                const uniqueBatches = Array.from(new Map(allBatches.map(item => [String(item.id), item])).values());
+                currentFilteredData = uniqueBatches.filter(batch => wishlist.includes(String(batch.id)));
+            } else {
+                currentFilteredData = batchesData[currentTab] || [];
+            }
+
+            if (query) {
+                currentFilteredData = currentFilteredData.filter(batch => {
+                    return batch.title.toLowerCase().includes(query) || String(batch.id).includes(query);
+                });
+            }
+
+            if (resetPagination) {
+                currentlyDisplayedCount = 0;
+                batchGrid.innerHTML = '';
+            }
+
+            renderBatchSlice();
+        }
+
+        function renderBatchSlice() {
+            if (currentFilteredData.length === 0) {
+                batchGrid.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                emptyState.classList.add('flex');
+                loadMoreContainer.classList.add('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            emptyState.classList.remove('flex');
+            batchGrid.classList.remove('hidden');
+
+            const nextCount = Math.min(currentlyDisplayedCount + ITEMS_PER_PAGE, currentFilteredData.length);
+            const itemsToRender = currentFilteredData.slice(currentlyDisplayedCount, nextCount);
+            
+            const html = itemsToRender.map((batch, index) => createCardHTML(batch, index)).join('');
+            
+            if (currentlyDisplayedCount === 0) {
+                batchGrid.innerHTML = html;
+            } else {
+                batchGrid.insertAdjacentHTML('beforeend', html);
+            }
+
+            currentlyDisplayedCount = nextCount;
+            lucide.createIcons();
+
+            if (currentlyDisplayedCount < currentFilteredData.length) {
+                loadMoreContainer.classList.remove('hidden');
+            } else {
+                loadMoreContainer.classList.add('hidden');
+            }
+        }
+
+        window.loadMore = function() {
+            const btn = document.getElementById('loadMoreBtn');
+            if (btn.disabled) return; // Double click freeze se bachane ke liye
+            
+            const originalHtml = btn.innerHTML;
+            btn.disabled = true;
+            
+            btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin mx-auto text-themeYellow"></i>`;
+            lucide.createIcons();
+            
+            setTimeout(() => {
+                renderBatchSlice();
+                btn.innerHTML = originalHtml;
+                btn.disabled = false;
+                lucide.createIcons();
+            }, 400);
+        };
+
+        function createCardHTML(batch, index) {
+            const id = String(batch.id);
+            const isInWishlist = wishlist.includes(id);
+            const heartFillClass = isInWishlist ? 'fill-themeYellow text-themeYellow' : 'text-white hover:text-themeYellow';
+            const delay = (index * 100) + 'ms';
+
+            return `
+                <div class="premium-card bg-cardBg rounded-2xl overflow-hidden fade-in-pop group flex flex-col relative" style="animation-delay: ${delay}">
+                    <div class="relative w-full aspect-[16/9] overflow-hidden bg-black image-container border-b border-white/5">
+                        <img src="${batch.thumbnail}" alt="${batch.title}" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out">
+                        
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0c] via-transparent to-transparent opacity-80"></div>
+                        <button onclick="toggleWishlist(event, '${id}')" class="absolute top-3 right-3 w-9 h-9 bg-black/60 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20 hover:bg-themeYellow/20 hover:border-themeYellow transition-all duration-300 btn-click-effect z-10 shadow-lg group/btn">
+                            <i data-lucide="heart" id="heart-icon-${id}" class="w-4 h-4 transition-colors ${heartFillClass} group-hover/btn:scale-110"></i>
+                        </button>
+                        
+                        <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none z-10">
+                            <div class="w-14 h-14 bg-themeYellow rounded-full flex items-center justify-center pl-1 shadow-[0_0_30px_rgba(250,204,21,0.6)] transform scale-50 group-hover:scale-100 transition-transform duration-500 ease-out border-2 border-white/20">
+                                <i data-lucide="play" class="w-6 h-6 text-black fill-black"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6 flex flex-col flex-1 relative z-20">
+                        <h3 class="text-white font-bold text-sm sm:text-base leading-snug mb-5 line-clamp-2 group-hover:text-themeYellow transition-colors duration-300">${batch.title}</h3>
+                        
+                        <div class="flex items-center justify-between mt-auto">
+                            <div class="flex flex-col">
+                                <span class="text-[9px] text-stone-500 uppercase tracking-widest font-black mb-1">Access</span>
+                                <span class="text-transparent bg-clip-text bg-gradient-to-r from-themeYellow to-orange-400 font-black text-sm drop-shadow-sm flex items-center gap-1"><i data-lucide="unlock" class="w-3 h-3 text-themeYellow"></i> PREMIUM</span>
+                            </div>
+                            
+                            <!-- UPDATED ONCLICK HERE -->
+                            <button onclick="handleStudyClick(event, '${id}')" class="bg-white/5 hover:bg-themeYellow border border-white/10 hover:border-themeYellow text-white hover:text-black px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center gap-2 transition-all duration-300 btn-click-effect shadow-md">
+                                Let's Study <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        window.toggleWishlist = function(event, batchId) {
+            event.stopPropagation();
+            batchId = String(batchId);
+            
+            const index = wishlist.indexOf(batchId);
+            const iconEls = document.querySelectorAll(`#heart-icon-${batchId}`);
+            
+            if (index === -1) {
+                wishlist.push(batchId);
+                iconEls.forEach(iconEl => {
+                    iconEl.classList.remove('text-white');
+                    iconEl.classList.add('fill-themeYellow', 'text-themeYellow', 'heart-bounce');
+                    setTimeout(() => iconEl.classList.remove('heart-bounce'), 500);
+                });
+            } else {
+                wishlist.splice(index, 1);
+                iconEls.forEach(iconEl => {
+                    iconEl.classList.remove('fill-themeYellow', 'text-themeYellow');
+                    iconEl.classList.add('text-white');
+                });
+                
+                if (currentTab === 'wishlist') {
+                    applyFiltersAndRender(true);
+                }
+            }
+
+            localStorage.setItem('studybee_wishlist', JSON.stringify(wishlist));
+            updateWishlistCount();
+        };
+
+        function updateWishlistCount() {
+            const countEl = document.getElementById('wishlist-count');
+            const mobileIndicator = document.getElementById('mobile-wishlist-indicator');
+            
+            if (wishlist.length > 0) {
+                countEl.innerText = wishlist.length;
+                countEl.classList.remove('hidden');
+                mobileIndicator.classList.remove('hidden');
+            } else {
+                countEl.classList.add('hidden');
+                mobileIndicator.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>

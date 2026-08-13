@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>StudyBee 🐝 | Course Content</title>
+    
+    <link rel="icon" href="https://i.ibb.co/yF4mhNPB/f493d534-fbf8-4b31-b741-83b343f8a9e1.jpg" type="image/jpeg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind Config for Premium Red Theme -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        themeBg: '#050303',
+                        cardBg: '#0f0a0a',
+                        cardHover: '#160f0f',
+                        themeRed: '#EF4444',     /* Vibrant Red */
+                        themeGreen: '#10B981',
+                        textDim: '#8A8A8A'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        syne: ['Syne', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Custom scrollbar matching Red theme */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #EF4444; }
+        
+        body { background-color: #050303; color: #d6d3d1; scroll-behavior: smooth; }
+        
+        /* Subtle Red Hex Pattern */
+        .bg-hex { 
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100'%3E%3Cpath d='M28 66L0 50V18L28 2l28 16v32z' fill='none' stroke='rgba(239,68,68,0.04)' stroke-width='1'/%3E%3Cpath d='M28 100L0 84V52l28-16 28 16v32z' fill='none' stroke='rgba(239,68,68,0.02)' stroke-width='1'/%3E%3C/svg%3E"); 
+        }
+        
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;  
+            overflow: hidden;
+        }
+
+        /* Banner Gradient for Red Theme */
+        .banner-gradient {
+            background: linear-gradient(135deg, rgba(30,10,10,1) 0%, rgba(10,5,5,1) 100%);
+            border: 1px solid rgba(239,68,68,0.1);
+        }
+        
+        .glass-card { 
+            background: linear-gradient(180deg, #120b0b 0%, #0a0505 100%);
+            border: 1px solid rgba(255,255,255,0.05); 
+        }
+
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col font-sans relative selection:bg-themeRed/30 pb-10">
+
+    <!-- Background Effects -->
+    <div class="fixed inset-0 pointer-events-none bg-hex z-[-1]"></div>
+    <div class="fixed top-0 right-1/4 w-[500px] h-[500px] bg-themeRed/10 rounded-full blur-[180px] pointer-events-none z-[-1]"></div>
+
+    <!-- Top Navigation Bar -->
+    <header class="border-b border-white/5 bg-[#050303]/80 backdrop-blur-2xl px-4 md:px-6 py-4 sticky top-0 z-50 flex items-center justify-between shadow-[0_4px_30px_rgba(0,0,0,0.5)]">
+        <div class="flex items-center gap-5 md:gap-8">
+            <button onclick="window.location.href='index.html'" class="flex items-center gap-2 text-stone-400 hover:text-themeRed transition-colors text-xs font-bold tracking-widest uppercase group">
+                <i class="fa-solid fa-arrow-left group-hover:-translate-x-1 transition-transform"></i> <span class="hidden md:inline">Batches</span>
+            </button>
+            <div class="flex items-center gap-3">
+                <img src="https://i.ibb.co/yF4mhNPB/f493d534-fbf8-4b31-b741-83b343f8a9e1.jpg" alt="StudyBee Logo" class="w-8 h-8 md:w-10 md:h-10 rounded-xl object-cover shadow-[0_0_15px_rgba(239,68,68,0.3)] border border-themeRed/20">
+                <h1 class="text-xl md:text-2xl font-black tracking-[0.1em] text-white font-syne">STUDY<span class="text-themeRed drop-shadow-[0_0_8px_rgba(239,68,68,0.5)]">BEE</span></h1>
+            </div>
+        </div>
+        <div class="flex items-center gap-2 px-3.5 py-1.5 bg-themeGreen/10 rounded-xl border border-themeGreen/20 text-[10px] md:text-xs font-bold text-themeGreen uppercase tracking-widest shadow-inner">
+            <div class="w-1.5 h-1.5 rounded-full bg-themeGreen animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]"></div>
+            <span class="hidden sm:inline">Portal</span> Secured
+        </div>
+    </header>
+
+    <main class="max-w-[1400px] w-full mx-auto p-4 md:p-6 lg:p-8 flex-1 mt-4">
+        
+        <!-- Hero Banner -->
+        <div id="course-banner" class="banner-gradient rounded-[2rem] p-6 md:p-10 flex-col-reverse md:flex-row items-center justify-between gap-8 mb-10 hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] relative overflow-hidden animate-fade-in">
+            <!-- Glow Effect -->
+            <div class="absolute -top-32 -left-32 w-80 h-80 bg-themeRed/20 blur-[120px] rounded-full pointer-events-none"></div>
+            
+            <div class="flex flex-col items-start gap-4 flex-1 w-full relative z-10">
+                <div class="flex items-center gap-2 px-3 py-1.5 bg-themeGreen/10 border border-themeGreen/20 rounded-lg text-xs font-bold text-themeGreen uppercase tracking-widest shadow-sm">
+                    <i class="fa-solid fa-check-circle text-themeGreen text-[10px]"></i>
+                    ENROLLED
+                </div>
+                <h2 id="course-title" class="text-3xl md:text-5xl font-black text-white leading-tight tracking-wide drop-shadow-lg font-syne">
+                    Loading Batch...
+                </h2>
+            </div>
+            <div class="w-full md:w-auto shrink-0 flex justify-center md:justify-end relative z-10">
+                <img id="course-thumb" src="" alt="Thumbnail" class="w-full max-w-[340px] rounded-[1.25rem] border border-white/10 shadow-[0_0_40px_rgba(239,68,68,0.2)] object-cover aspect-[16/9] hidden group-hover:scale-105 transition-transform duration-500">
+            </div>
+        </div>
+
+        <!-- Tabs Navigation -->
+        <div class="flex gap-8 border-b border-white/5 mb-8 overflow-x-auto scrollbar-hide px-2">
+            <button id="tab-overview" onclick="switchTab('overview')" class="pb-3.5 text-sm md:text-base font-bold flex items-center gap-2 text-themeRed border-b-[3px] border-themeRed transition-all whitespace-nowrap drop-shadow-[0_0_10px_rgba(239,68,68,0.5)]">
+                <i class="fa-solid fa-circle-info"></i> OVERVIEW
+            </button>
+            <button id="tab-content" onclick="switchTab('content')" class="pb-3.5 text-sm md:text-base font-bold flex items-center gap-2 text-stone-400 hover:text-white border-b-[3px] border-transparent transition-all whitespace-nowrap">
+                <i class="fa-regular fa-folder-open"></i> COURSE CONTENT
+            </button>
+        </div>
+
+        <!-- Global Loader -->
+        <div id="loader" class="flex flex-col justify-center items-center py-28 hidden">
+            <div class="w-14 h-14 border-4 border-white/5 border-t-themeRed rounded-full animate-spin shadow-[0_0_20px_rgba(239,68,68,0.4)]"></div>
+            <p class="text-themeRed text-xs mt-6 font-bold tracking-[0.2em] animate-pulse uppercase">Fetching Premium Content...</p>
+        </div>
+
+        <!-- OVERVIEW SECTION -->
+        <div id="section-overview" class="animate-fade-in hidden">
+            <div class="glass-card rounded-[2rem] p-6 md:p-10 shadow-2xl text-stone-300 leading-relaxed text-sm md:text-base prose prose-invert max-w-none prose-headings:text-white prose-headings:font-black prose-headings:font-syne prose-a:text-themeRed hover:border-themeRed/20 transition-colors" id="course-desc-content">
+                Loading description...
+            </div>
+        </div>
+
+        <!-- CONTENT SECTION -->
+        <div id="section-content" class="animate-fade-in hidden">
+            <!-- Breadcrumbs -->
+            <div class="mb-8 bg-[#0a0505] p-3.5 rounded-2xl flex items-center overflow-x-auto whitespace-nowrap scrollbar-hide shadow-lg border border-white/5">
+                <div id="breadcrumbs" class="flex items-center text-xs md:text-sm font-bold text-stone-400 uppercase tracking-widest px-2">
+                    <!-- Injected by JS -->
+                </div>
+            </div>
+
+            <!-- Content Grid -->
+            <div id="content-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5 md:gap-6">
+                <!-- Items Injected by JS -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="empty-state" class="hidden flex flex-col items-center justify-center py-28 text-center">
+                <div class="w-24 h-24 bg-gradient-to-br from-[#1a0f0f] to-[#0a0505] rounded-full flex items-center justify-center mb-6 border border-white/5 shadow-xl relative">
+                    <div class="absolute inset-0 bg-themeRed/5 rounded-full animate-ping"></div>
+                    <i class="fa-regular fa-folder-open text-4xl text-stone-500 relative z-10"></i>
+                </div>
+                <h3 class="text-2xl font-black text-white mb-2 tracking-wide font-syne">Folder is Empty</h3>
+                <p class="text-sm font-medium text-stone-400">No content available in this directory yet.</p>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // Config & State
+        const WORKER_URL = 'https://mjv.iownprince5.workers.dev/';
+        const urlParams = new URLSearchParams(window.location.search);
+        const courseId = urlParams.get('id');
+        let folderHistory = [{ id: "0", title: "ROOT DIRECTORY" }]; 
+        
+        // DOM Elements
+        const elCourseBanner = document.getElementById('course-banner');
+        const elCourseThumb = document.getElementById('course-thumb');
+        const elCourseTitle = document.getElementById('course-title');
+        const elCourseDescContent = document.getElementById('course-desc-content');
+        
+        const elBreadcrumbs = document.getElementById('breadcrumbs');
+        const elLoader = document.getElementById('loader');
+        
+        const elContentGrid = document.getElementById('content-grid');
+        const elEmptyState = document.getElementById('empty-state');
+        
+        const sectionOverview = document.getElementById('section-overview');
+        const sectionContent = document.getElementById('section-content');
+
+        // Main Init
+        async function init() {
+            if (!courseId) {
+                // Better error handling UI without alert()
+                elCourseBanner.classList.remove('hidden');
+                elCourseBanner.classList.add('flex');
+                elCourseTitle.innerText = "Course Not Found";
+                elCourseTitle.classList.add('text-themeRed');
+                sectionOverview.classList.remove('hidden');
+                elCourseDescContent.innerHTML = `<div class="text-center py-10"><i class="fa-solid fa-triangle-exclamation text-4xl text-themeRed mb-4 block"></i><h3 class="text-xl font-bold text-white mb-2">Invalid Access</h3><p class="text-stone-400">No Course ID was provided. Please return to the batches page.</p><button onclick="window.location.href='index.html'" class="mt-6 bg-themeRed text-white px-6 py-2.5 rounded-xl font-bold text-sm uppercase tracking-wider hover:bg-red-500 transition-colors">Go Back</button></div>`;
+                return;
+            }
+            switchTab('overview');
+            fetchCourseOverview();
+            loadFolder("0", "ROOT DIRECTORY"); 
+        }
+
+        // Tab Switcher
+        function switchTab(tabName) {
+            const inactiveClass = "pb-3.5 text-sm md:text-base font-bold flex items-center gap-2 text-stone-400 hover:text-white border-b-[3px] border-transparent transition-all whitespace-nowrap";
+            const activeClass = "pb-3.5 text-sm md:text-base font-bold flex items-center gap-2 text-themeRed border-b-[3px] border-themeRed transition-all whitespace-nowrap drop-shadow-[0_0_10px_rgba(239,68,68,0.5)]";
+            
+            // Reset
+            document.getElementById('tab-overview').className = inactiveClass;
+            document.getElementById('tab-content').className = inactiveClass;
+            
+            sectionOverview.classList.add('hidden');
+            sectionContent.classList.add('hidden');
+            
+            // Hide all sub-states to prevent overlapping
+            elContentGrid.classList.add('hidden');
+            elEmptyState.classList.add('hidden');
+
+            // Set Active
+            if (tabName === 'overview') {
+                document.getElementById('tab-overview').className = activeClass;
+                sectionOverview.classList.remove('hidden');
+            } else if (tabName === 'content') {
+                document.getElementById('tab-content').className = activeClass;
+                sectionContent.classList.remove('hidden');
+                
+                // Show content grid or empty state based on current data
+                if (elContentGrid.innerHTML.trim() !== '') {
+                    elContentGrid.classList.remove('hidden');
+                } else {
+                    elEmptyState.classList.remove('hidden');
+                }
+            }
+        }
+
+        // 1. Fetch Course Overview
+        async function fetchCourseOverview() {
+            try {
+                const res = await fetch(`${WORKER_URL}?overview=${courseId}`);
+                const json = await res.json();
+                
+                if (json.success && json.data) {
+                    const overviewTab = json.data.find(d => d.type === 'overview');
+                    const detailsSection = overviewTab?.data?.find(l => l.layout_type === 'details');
+                    const courseDetails = detailsSection?.layout_data?.[0];
+
+                    if (courseDetails) {
+                        elCourseTitle.innerText = courseDetails.title || 'Course Details';
+                        
+                        if(courseDetails.thumbnail) {
+                            elCourseThumb.src = courseDetails.thumbnail;
+                            elCourseThumb.classList.remove('hidden');
+                        }
+                        
+                        if(courseDetails.description) {
+                            elCourseDescContent.innerHTML = courseDetails.description;
+                        } else {
+                            elCourseDescContent.innerHTML = "<p>No description available for this course.</p>";
+                        }
+                        
+                        elCourseBanner.classList.remove('hidden');
+                        elCourseBanner.classList.add('flex');
+                    }
+                }
+            } catch (error) {
+                console.error("Overview Fetch Error:", error);
+            }
+        }
+
+        // 2. Fetch Content (Folders, Video, PDF)
+        async function loadFolder(folderId, folderTitle) {
+            const existingIndex = folderHistory.findIndex(f => f.id === folderId);
+            if (existingIndex > -1) {
+                folderHistory = folderHistory.slice(0, existingIndex + 1);
+            } else {
+                folderHistory.push({ id: folderId, title: folderTitle });
+            }
+
+            renderBreadcrumbs();
+            showUI('loader');
+
+            try {
+                const res = await fetch(`${WORKER_URL}?content=${courseId}&folder=${folderId}`);
+                const json = await res.json();
+
+                if (json.success && json.data && json.data.length > 0) {
+                    renderContentGrid(json.data);
+                    showUI('grid');
+                } else {
+                    showUI('empty');
+                }
+            } catch (error) {
+                console.error("Content Fetch Error:", error);
+                showUI('empty');
+            }
+        }
+
+        // 4. Render Breadcrumbs UI
+        function renderBreadcrumbs() {
+            elBreadcrumbs.innerHTML = folderHistory.map((folder, index) => {
+                const isFirst = index === 0;
+                const isLast = index === folderHistory.length - 1;
+                
+                let icon = isFirst ? `<i class="fa-solid fa-hard-drive mr-2 ${isLast ? 'text-themeRed drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]' : ''}"></i>` : '';
+                let colorClass = isLast ? 'text-themeRed drop-shadow-[0_0_8px_rgba(239,68,68,0.5)]' : 'text-stone-400 hover:text-white cursor-pointer';
+
+                return `
+                    <span class="flex items-center group">
+                        <span class="flex items-center transition-colors duration-300 ${colorClass}" 
+                              onclick="${isLast ? '' : `loadFolder('${folder.id}', '${folder.title.replace(/'/g, "\\'")}')`} ">
+                            ${icon} ${folder.title}
+                        </span>
+                        ${!isLast ? `<i class="fa-solid fa-chevron-right text-[10px] mx-3 text-stone-600 group-hover:text-themeRed transition-colors"></i>` : ''}
+                    </span>
+                `;
+            }).join('');
+        }
+
+        // 5. Content Grid Render
+        function renderContentGrid(items) {
+            elContentGrid.innerHTML = items.map(item => {
+                if (item.type === 'folder') return generateFolderHTML(item);
+                if (item.type === 'file') {
+                    const fileType = item.data?.file_type;
+                    if (fileType === 2 || item.data?.video_type > 0) return generateVideoHTML(item);
+                    return generatePdfHTML(item);
+                }
+                return '';
+            }).join('');
+        }
+
+        // -- Components -- //
+
+        function generateFolderHTML(item) {
+            const counts = item.data?.content_counts || {};
+            const fCount = counts.folders?.total || 0;
+            const vCount = (counts.video?.paid || 0) + (counts.video?.free || 0);
+            const pCount = (counts.pdf?.paid || 0) + (counts.pdf?.free || 0);
+            const escapedTitle = item.title.replace(/'/g, "\\'");
+            
+            let countsText = `VIDEO ${vCount} &nbsp;&nbsp;PDF ${pCount}`;
+            if (fCount > 0 && vCount === 0 && pCount === 0) {
+                countsText = `FOLDERS ${fCount}`;
+            } else if (fCount > 0) {
+                countsText = `FOLDERS ${fCount} &nbsp;VIDEO ${vCount} &nbsp;PDF ${pCount}`;
+            }
+
+            return `
+                <div onclick="loadFolder('${item.entity_id}', '${escapedTitle}')" 
+                     class="bg-gradient-to-b from-[#140d0d] to-[#0a0a0a] rounded-2xl cursor-pointer transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_12px_25px_rgba(239,68,68,0.15)] hover:border-themeRed/40 group flex flex-col justify-between p-4 md:p-5 h-[130px] border border-white/5 relative overflow-hidden">
+                    
+                    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-px bg-gradient-to-r from-transparent via-themeRed/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+
+                    <!-- Top Icon Box -->
+                    <div class="w-10 h-10 bg-[#1c1212] rounded-xl flex items-center justify-center border border-white/5 group-hover:bg-themeRed/10 transition-colors duration-300">
+                        <i class="fa-regular fa-folder text-stone-400 group-hover:text-themeRed text-lg group-hover:scale-110 transition-all duration-300 drop-shadow-sm"></i>
+                    </div>
+
+                    <!-- Bottom Text -->
+                    <div class="mt-auto relative z-10">
+                        <h3 class="text-stone-100 font-bold text-[14px] md:text-[15px] leading-tight line-clamp-2 group-hover:text-white transition-colors">${item.title}</h3>
+                        ${(vCount > 0 || pCount > 0 || fCount > 0) ? `<div class="mt-2 text-[9px] md:text-[10px] text-stone-500 font-bold uppercase tracking-wider group-hover:text-themeRed/80 transition-colors">${countsText}</div>` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateVideoHTML(item) {
+            const fallbackThumbnail = 'https://decicqog4ulhy.cloudfront.net/0/admin_v2/uploads/courses/thumbnail/2671188_1_logo.jpg';
+            const thumbnail = item.data?.thumbnail?.trim() ? item.data.thumbnail : fallbackThumbnail;
+            const duration = formatDuration(item.data?.duration || 0);
+            const isLive = item.data?.is_live == 1;
+            
+            // Glowing Red Tags
+            const topTagHTML = isLive 
+                ? `<div class="absolute top-2 left-2 flex items-center gap-1.5 px-2.5 py-1 bg-themeRed backdrop-blur-md rounded-lg border border-red-400 text-[9px] font-black text-white uppercase tracking-widest shadow-[0_0_20px_rgba(239,68,68,0.8)]"><div class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></div>LIVE</div>`
+                : `<div class="absolute top-2 left-2 flex items-center gap-1.5 px-2.5 py-1 bg-black/80 backdrop-blur-md rounded-lg border border-white/10 text-[9px] font-black text-themeRed uppercase tracking-widest shadow-lg"><div class="w-1.5 h-1.5 rounded-full bg-themeRed animate-pulse"></div>VIDEO</div>`;
+
+            return `
+                <div onclick="window.location.href='play.html?courseId=${courseId}&contentId=${item.entity_id}'" 
+                     class="glass-card rounded-[1.25rem] overflow-hidden cursor-pointer transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_15px_30px_rgba(239,68,68,0.15)] hover:border-themeRed/40 group flex flex-col h-[210px] border-[1px] border-white/5">
+                    <div class="relative h-[120px] w-full bg-black overflow-hidden border-b border-white/5">
+                        <img src="${thumbnail}" alt="${item.title}" class="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700 ease-out">
+                        
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent opacity-60"></div>
+                        
+                        ${topTagHTML}
+                        
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-themeRed/10 backdrop-blur-[1px]">
+                            <div class="w-12 h-12 bg-themeRed rounded-full flex items-center justify-center pl-1 shadow-[0_0_30px_rgba(239,68,68,0.8)] transform scale-75 group-hover:scale-100 transition-transform duration-300 border-[2px] border-red-400">
+                                <i class="fa-solid fa-play text-white text-lg"></i>
+                            </div>
+                        </div>
+                        
+                        ${duration !== '00:00' ? `<div class="absolute bottom-2 right-2 bg-black/80 backdrop-blur-md text-white text-[10px] px-2 py-1 rounded-md font-black tracking-widest border border-white/10 group-hover:bg-themeRed group-hover:text-white group-hover:border-themeRed transition-colors shadow-lg">${duration}</div>` : ''}
+                    </div>
+                    <div class="p-4 flex-1 flex flex-col justify-between bg-gradient-to-b from-transparent to-[#050303]">
+                        <h3 class="text-stone-100 font-bold text-[14px] md:text-[15px] leading-snug line-clamp-2 group-hover:text-white transition-colors">${item.title}</h3>
+                        <div class="text-[10px] text-stone-500 font-bold tracking-[0.15em] uppercase mt-2 group-hover:text-themeRed/70 transition-colors">Lecture</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function generatePdfHTML(item) {
+            return `
+                <div onclick="window.location.href='play.html?courseId=${courseId}&contentId=${item.entity_id}'" 
+                     class="glass-card rounded-[1.25rem] overflow-hidden cursor-pointer transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_15px_30px_rgba(239,68,68,0.15)] hover:border-themeRed/40 group flex flex-col h-[210px] border-[1px] border-white/5">
+                    <div class="relative h-[120px] w-full bg-[#0a0505] flex items-center justify-center overflow-hidden border-b border-white/5">
+                         <div class="absolute inset-0 bg-themeRed/5 group-hover:bg-themeRed/15 transition-colors duration-500"></div>
+                         
+                         <i class="fa-solid fa-file-pdf text-3xl md:text-4xl text-themeRed/70 group-hover:text-themeRed group-hover:scale-110 transition-all duration-500 drop-shadow-[0_0_15px_rgba(239,68,68,0.4)] z-10"></i>
+                         
+                         <div class="absolute top-2 left-2 flex items-center gap-1.5 px-2.5 py-1 bg-black/80 backdrop-blur-md rounded-lg border border-themeRed/20 text-[9px] font-black text-themeRed uppercase tracking-widest shadow-lg z-10">
+                            NOTES
+                        </div>
+                    </div>
+                    <div class="p-4 flex-1 flex flex-col justify-between bg-gradient-to-b from-transparent to-[#050303]">
+                        <h3 class="text-stone-100 font-bold text-[14px] md:text-[15px] leading-snug line-clamp-2 group-hover:text-white transition-colors">${item.title}</h3>
+                        <div class="text-[10px] text-stone-500 font-bold tracking-[0.15em] uppercase mt-2 group-hover:text-themeRed/70 transition-colors">Document</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function formatDuration(seconds) {
+            if (!seconds || isNaN(seconds)) return '00:00';
+            const h = Math.floor(seconds / 3600);
+            const m = Math.floor((seconds % 3600) / 60);
+            const s = Math.floor(seconds % 60);
+            const mStr = m.toString().padStart(2, '0');
+            const sStr = s.toString().padStart(2, '0');
+            return h > 0 ? `${h}:${mStr}:${sStr}` : `${mStr}:${sStr}`;
+        }
+
+        // Utility: State Manager
+        function showUI(state) {
+            elLoader.classList.add('hidden');
+            elContentGrid.classList.add('hidden');
+            elEmptyState.classList.add('hidden');
+
+            if (state === 'loader') {
+                elLoader.classList.remove('hidden');
+            } else if (state === 'grid') {
+                elContentGrid.classList.remove('hidden');
+                if(document.getElementById('tab-content').className.includes('border-themeRed')) {
+                   sectionContent.classList.remove('hidden'); 
+                }
+            } else if (state === 'empty') {
+                elEmptyState.classList.remove('hidden');
+                if(document.getElementById('tab-content').className.includes('border-themeRed')) {
+                   sectionContent.classList.remove('hidden'); 
+                }
+            }
+        }
+
+        // Boot
+        init();
+    </script>
+</body>
+</html>
