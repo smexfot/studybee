@@ -1,0 +1,347 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head><meta name="robots" content="noindex, follow">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vibrant Batches</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #2563eb;
+      min-height: 100vh;
+      color: #111827;
+    }
+
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: #ffffff;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    }
+
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 16px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo-link {
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    .logo {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .main {
+      padding: 48px 16px;
+    }
+
+    .grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+      gap: 32px;
+    }
+
+    @media (min-width: 640px) {
+      .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    .card {
+      background: #ffffff;
+      border: 2px solid #e5e7eb;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: scale(1.03);
+    }
+
+    .card-image-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #f3f4f6;
+    }
+
+    .card-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .card-content {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      min-height: 180px;
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #1f2937;
+      min-height: 40px;
+      line-height: 1.4;
+    }
+
+    .price-row {
+      margin-top: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .free-text {
+      font-size: 32px;
+      font-weight: 700;
+      color: #16a34a;
+    }
+
+    .price-box {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .price {
+      font-size: 28px;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .original-price {
+      font-size: 14px;
+      color: #6b7280;
+      text-decoration: line-through;
+    }
+
+    .discount-badge {
+      background: #dcfce7;
+      color: #15803d;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 999px;
+      padding: 4px 10px;
+      border: 1px solid #bbf7d0;
+    }
+
+    .view-btn {
+      width: 100%;
+      margin-top: 16px;
+      background: #2563eb;
+      color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      padding: 14px 16px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.25s ease;
+    }
+
+    .view-btn:hover {
+      background: #1d4ed8;
+    }
+
+    .fallback {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #6b7280;
+      font-size: 14px;
+      width: 100%;
+      height: 100%;
+      background: #e5e7eb;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <a class="logo-link" href="/vibrant">
+        <img
+          class="logo"
+          src="https://nocache-appxdb-v2.classx.co.in/subject/2026-02-24-0.8461171343418096.png"
+          alt="Vibrant Academy Logo"
+        />
+      </a>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="grid" id="batchGrid"></div>
+  </main>
+
+  <script >
+    const batches = [
+      {
+        id: 8,
+        cls: 11,
+        title: "JEE 2028: 11th Class OG KOTA BATCH",
+        imageUrl: "https://appx-content-v2.classx.co.in/paid_course3/2026-03-20-0_7755858005992874.jpeg",
+        price: "Free",
+        originalPrice: "",
+        discount: ""
+      },
+      {
+        id: 10,
+        cls:12,
+        title: "JEE 2027: 12th Class OG KOTA Batch",
+        imageUrl: "https://appx-content-v2.classx.co.in/paid_course3/2026-03-20-0_1711192735086824.jpeg",
+        price: "Free",
+        originalPrice: "",
+        discount: ""
+      },
+      {
+        id: 35,
+        cls:11,
+        title: "JEE 2028: 11th Class P2 Batch",
+        imageUrl: "https://appx-content-v2.classx.co.in/paid_course3/2026-06-28-0_5171654847118846.png",
+        price: "Free",
+        originalPrice: "",
+        discount: ""
+      },
+      {
+        id: 36,
+        cls:12,
+        title: "JEE 2027: 12th Class A2 Batch",
+        imageUrl: "https://appx-content-v2.classx.co.in/paid_course3/2026-06-10-0_5680222141996314.png",
+        price: "Free",
+        originalPrice: "",
+        discount: ""
+      },
+      {
+        id: 7,
+        cls: 11,
+        title: "Free Resources",
+        imageUrl: "https://appx-content-v2.classx.co.in/paid_course3/2026-03-15-0_9931362198126962.jpeg",
+        price: "Free",
+        originalPrice: "",
+        discount: ""
+      }
+    ];
+
+    const batchGrid = document.getElementById("batchGrid");
+
+    function createCard(batch) {
+      const card = document.createElement("div");
+      card.className = "card";
+
+      const imageWrap = document.createElement("div");
+      imageWrap.className = "card-image-wrap";
+
+      const img = document.createElement("img");
+      img.className = "card-image";
+      img.src = batch.imageUrl;
+      img.alt = batch.title;
+
+      img.onerror = function () {
+        this.style.display = "none";
+        const fallback = document.createElement("div");
+        fallback.className = "fallback";
+        fallback.textContent = "Image not available";
+        imageWrap.appendChild(fallback);
+      };
+
+      imageWrap.appendChild(img);
+
+      const content = document.createElement("div");
+      content.className = "card-content";
+
+      const title = document.createElement("h3");
+      title.className = "card-title";
+      title.textContent = batch.title;
+
+      const priceRow = document.createElement("div");
+      priceRow.className = "price-row";
+
+      if (batch.price !== "Free") {
+        const left = document.createElement("div");
+        left.className = "price-box";
+
+        const price = document.createElement("p");
+        price.className = "price";
+        price.textContent = "₹" + batch.price;
+
+        left.appendChild(price);
+
+        if (batch.originalPrice) {
+          const original = document.createElement("p");
+          original.className = "original-price";
+          original.textContent = "₹" + batch.originalPrice;
+          left.appendChild(original);
+        }
+
+        priceRow.appendChild(left);
+
+        if (batch.discount) {
+          const badge = document.createElement("span");
+          badge.className = "discount-badge";
+          badge.textContent = batch.discount;
+          priceRow.appendChild(badge);
+        }
+      } else {
+        const free = document.createElement("p");
+        free.className = "free-text";
+        free.textContent = "Free";
+        priceRow.appendChild(free);
+      }
+
+      const button = document.createElement("button");
+      button.className = "view-btn";
+      button.textContent = "View Content";
+      button.addEventListener("click", function () {
+        const url = "vibrant/batch?course_id=" + encodeURIComponent(batch.id) + "&cls=" + encodeURIComponent(batch.cls) +
+                    "&title=" + encodeURIComponent(batch.title);
+        window.location.href = url;
+      });
+
+      content.appendChild(title);
+      content.appendChild(priceRow);
+      content.appendChild(button);
+
+      card.appendChild(imageWrap);
+      card.appendChild(content);
+
+      return card;
+    }
+
+    batches.forEach(batch => {
+      batchGrid.appendChild(createCard(batch));
+    });
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"5ebbf291487d4e7291a999684971fa51","r":1}' crossorigin="anonymous"></script>
+</body>
+</html>

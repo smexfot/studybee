@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Update | Premium Portal</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap');
+
+        :root {
+            --bg-color: #03040a;
+            --gold-primary: #d4af37;
+            --gold-hover: #ffdf00;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(212, 175, 55, 0.2);
+            --text-main: #ffffff;
+            --text-muted: #888888;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: radial-gradient(circle at 50% 0%, rgba(212, 175, 55, 0.1) 0%, transparent 50%);
+            overflow-x: hidden;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            padding: 40px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            transform: translateY(20px);
+            opacity: 0;
+            animation: cinematicFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes cinematicFadeIn {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .header h1 {
+            font-weight: 600;
+            font-size: 24px;
+            letter-spacing: 2px;
+            color: var(--gold-primary);
+            text-transform: uppercase;
+        }
+
+        .header p {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 5px;
+            letter-spacing: 1px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .input-group {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group.full-width {
+            grid-column: span 2;
+        }
+
+        label {
+            font-size: 11px;
+            color: var(--gold-primary);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.8;
+        }
+
+        input {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 12px 15px;
+            color: var(--text-main);
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.2);
+        }
+
+        input:focus {
+            border-color: var(--gold-primary);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.15);
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        button {
+            grid-column: span 2;
+            background: transparent;
+            color: var(--gold-primary);
+            border: 1px solid var(--gold-primary);
+            padding: 15px;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            margin-top: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button:hover {
+            background: var(--gold-primary);
+            color: var(--bg-color);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+        }
+
+        button:disabled {
+            border-color: var(--text-muted);
+            color: var(--text-muted);
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        #statusMessage {
+            grid-column: span 2;
+            text-align: center;
+            font-size: 13px;
+            margin-top: 15px;
+            min-height: 20px;
+            transition: color 0.3s ease;
+        }
+
+        .success { color: #4CAF50; }
+        .error { color: #ff4444; }
+        .loading { color: var(--gold-primary); animation: pulse 1.5s infinite; }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>Update Profile</h1>
+            <p>Secure Sync API</p>
+        </div>
+
+        <form id="updateForm" class="form-grid">
+            <div class="input-group full-width">
+                <label>Name</label>
+                <input type="text" id="name" value="PRINCE" required>
+            </div>
+            
+            <div class="input-group full-width">
+                <label>Email</label>
+                <input type="email" id="email" value="smexfot@gmail.com" required>
+            </div>
+
+            <div class="input-group">
+                <label>Country Code</label>
+                <input type="text" id="c_code" value="+91" required>
+            </div>
+
+            <div class="input-group">
+                <label>Mobile</label>
+                <input type="text" id="mobile" value="6386373293" required>
+            </div>
+
+            <div class="input-group">
+                <label>State ID</label>
+                <input type="text" id="state_id" value="13" required>
+            </div>
+
+            <div class="input-group">
+                <label>City ID</label>
+                <input type="text" id="city_id" value="429" required>
+            </div>
+
+            <div class="input-group full-width">
+                <label>Device Token</label>
+                <input type="text" id="device_token" value="dfg1xcvbcvcvcnvnnewwsdfwerw234567890" required>
+            </div>
+
+            <!-- Naya Profile URL Input Yaha Add Kiya Hai -->
+            <div class="input-group full-width">
+                <label>Profile Image URL</label>
+                <input type="url" id="profile" placeholder="https://example.com/my-avatar.jpg">
+            </div>
+
+            <button type="submit" id="submitBtn">Sync Profile Data</button>
+            <div id="statusMessage"></div>
+        </form>
+    </div>
+
+    <script>
+        const form = document.getElementById('updateForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const statusMessage = document.getElementById('statusMessage');
+
+        // Target Worker URL (Yaha aapna worker route verify kar lena)
+        const WORKER_URL = "https://rex.smexfot.workers.dev/";
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // UI State: Loading
+            submitBtn.disabled = true;
+            submitBtn.textContent = "SYNCING...";
+            statusMessage.textContent = "Connecting to worker...";
+            statusMessage.className = "loading";
+
+            // Build dynamic payload from inputs
+            const payload = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                c_code: document.getElementById('c_code').value,
+                mobile: document.getElementById('mobile').value,
+                state_id: document.getElementById('state_id').value,
+                city_id: document.getElementById('city_id').value,
+                device_token: document.getElementById('device_token').value,
+                profile: document.getElementById('profile').value // Ab ye user input lega
+            };
+
+            try {
+                const response = await fetch(WORKER_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    statusMessage.textContent = "Profile successfully synced!";
+                    statusMessage.className = "success";
+                    console.log("Response:", data);
+                } else {
+                    throw new Error(data.error || "Failed to update profile");
+                }
+            } catch (error) {
+                statusMessage.textContent = "Error: " + error.message;
+                statusMessage.className = "error";
+                console.error("Worker Error:", error);
+            } finally {
+                // UI State: Reset
+                submitBtn.disabled = false;
+                submitBtn.textContent = "Sync Profile Data";
+            }
+        });
+    </script>
+</body>
+</html>

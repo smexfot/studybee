@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>Player — Studybee</title>
+<link rel="icon" href="https://i.ibb.co/yF4mhNPB/f493d534-fbf8-4b31-b741-83b343f8a9e1.jpg" type="image/jpeg">
+<link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+        --bg-player: #050505;
+        --accent: #FACC15;
+        --accent-hover: #EAB308;
+        --text-muted: rgba(255,255,255,0.45);
+        --border: rgba(255,255,255,0.06);
+        --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        --font-display: 'Syne', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    html, body {
+        width: 100%;
+        min-height: 100vh;
+        min-height: 100dvh;
+        background: var(--bg-player);
+        font-family: var(--font);
+    }
+    body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 8px;
+    }
+    .bg-pattern {
+        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100'%3E%3Cpath d='M28 66L0 50V18L28 2l28 16v32z' fill='none' stroke='rgba(250,204,21,0.02)' stroke-width='1'/%3E%3Cpath d='M28 100L0 84V52l28-16 28 16v32z' fill='none' stroke='rgba(250,204,21,0.01)' stroke-width='1'/%3E%3C/svg%3E");
+    }
+    .top-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 20;
+        padding: 12px 16px;
+        background: linear-gradient(180deg, rgba(5,5,5,0.95) 60%, transparent);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        pointer-events: none;
+    }
+    .top-bar * { pointer-events: auto; }
+    .btn-back {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        border: 1px solid rgba(255,255,255,0.08);
+        background: rgba(255,255,255,0.05);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+    }
+    .btn-back:hover { background: rgba(255,255,255,0.12); border-color: rgba(250,204,21,0.3); }
+    .btn-back:active { transform: scale(0.94); }
+    .logo-small {
+        width: 30px; height: 30px; border-radius: 8px;
+        background: rgba(250, 204, 21, 0.1); border: 1px solid rgba(250, 204, 21, 0.2);
+        display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .logo-small img { width: 16px; height: 16px; border-radius: 3px; }
+    .brand {
+        font-size: 16px;
+        font-weight: 800;
+        color: #fff;
+        letter-spacing: 0.03em;
+        font-family: var(--font-display);
+        opacity: 0.95;
+    }
+    .brand span { color: var(--accent); }
+    .video-wrapper {
+        position: relative;
+        width: 100%;
+        background: #000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        aspect-ratio: 16/9;
+        max-height: 100vh;
+        max-height: 100dvh;
+    }
+    @media (max-width: 600px) and (orientation: portrait) {
+        .video-wrapper {
+            aspect-ratio: auto;
+            height: 100vh;
+            height: 100dvh;
+        }
+    }
+    .plyr, video {
+        width: 100%;
+        height: 100%;
+    }
+    video { object-fit: contain; background: #000; }
+    .plyr__control--overlaid { 
+        padding: 18px !important;
+        background: var(--accent) !important;
+        border-radius: 50% !important;
+        box-shadow: 0 4px 20px rgba(250,204,21,0.4) !important;
+    }
+    .plyr__control--overlaid:hover { background: var(--accent-hover) !important; }
+    .plyr__control--overlaid svg { 
+        width: 22px !important;
+        height: 22px !important;
+        color: #050505 !important;
+    }
+    .plyr {
+        --plyr-color-main: var(--accent);
+        --plyr-video-control-color: rgba(255,255,255,0.8);
+        --plyr-video-control-color-hover: #fff;
+        --plyr-video-control-background-hover: rgba(250,204,21,0.2);
+        --plyr-video-progress-buffered-background: rgba(255,255,255,0.12);
+        --plyr-video-range-track-background: rgba(255,255,255,0.12);
+        --plyr-video-range-thumb-background: var(--accent);
+        --plyr-font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    .plyr__controls {
+        background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, transparent 100%) !important;
+        padding: 40px 12px 12px !important;
+    }
+    .plyr__progress__container {
+        margin-top: -4px;
+    }
+    @media (hover: none) and (pointer: coarse) {
+        .plyr__controls .plyr__control { padding: 10px !important; }
+        .plyr__controls { padding: 30px 8px 8px !important; }
+    }
+    .loading-overlay {
+        position: absolute;
+        inset: 0;
+        background: #000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+        transition: opacity .4s ease;
+    }
+    .loading-overlay.hidden { opacity: 0; pointer-events: none; }
+    .spinner {
+        width: 44px;
+        height: 44px;
+        border: 3px solid rgba(255,255,255,0.06);
+        border-top-color: var(--accent);
+        border-radius: 50%;
+        animation: spin .8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .error-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(5,5,5,0.95);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        z-index: 10;
+        padding: 24px;
+        text-align: center;
+    }
+    .error-overlay.visible { display: flex; }
+    .error-icon {
+        font-size: 42px;
+        opacity: 0.5;
+        margin-bottom: 4px;
+    }
+    .error-msg {
+        color: #fca5a5;
+        font-size: 14px;
+        line-height: 1.6;
+        max-width: 320px;
+        font-weight: 500;
+    }
+    .retry-btn {
+        padding: 10px 28px;
+        background: var(--accent);
+        border: none;
+        border-radius: 50px;
+        color: #050505;
+        font-family: inherit;
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s;
+        margin-top: 4px;
+    }
+    .retry-btn:hover { background: var(--accent-hover); transform: translateY(-1px); }
+    .retry-btn:active { transform: scale(0.96); }
+    .no-src {
+        color: rgba(255,255,255,0.3);
+        font-family: var(--font);
+        font-size: 14px;
+        text-align: center;
+        padding: 20px;
+        line-height: 1.6;
+    }
+    .no-src code {
+        background: rgba(255,255,255,0.05);
+        padding: 2px 8px;
+        border-radius: 6px;
+        font-size: 12px;
+        color: rgba(255,255,255,0.4);
+    }
+    @media(max-width:500px){
+        .top-bar { padding: 10px 12px; }
+        .brand { font-size: 14px; }
+        .btn-back { width: 32px; height: 32px; }
+        .logo-small { width: 26px; height: 26px; }
+    }
+</style>
+</head>
+<body>
+<div class="bg-pattern"></div>
+<div class="top-bar">
+    <button class="btn-back" onclick="goBackNative()" aria-label="Go back">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+    </button>
+    <div class="logo-small">
+        <img src="https://i.ibb.co/yF4mhNPB/f493d534-fbf8-4b31-b741-83b343f8a9e1.jpg" alt="Logo">
+    </div>
+    <div class="brand">STUDY<span>BEE</span></div>
+    <div style="flex:1;"></div>
+</div>
+<div class="video-wrapper" id="videoWrapper">
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+    </div>
+    <div class="error-overlay" id="errorOverlay">
+        <div class="error-icon">⚠️</div>
+        <div class="error-msg" id="errorMessage">Unable to load the video.</div>
+        <button class="retry-btn" onclick="retryLoad()">Retry</button>
+    </div>
+    <video id="videoPlayer" playsinline webkit-playsinline></video>
+</div>
+<script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<script>
+(function () {
+    'use strict';
+    window.goBackNative = function() {
+        try {
+            if (typeof AppInterface !== 'undefined') AppInterface.forceGoToHome();
+            else history.back();
+        } catch(e) { history.back(); }
+    };
+    var WORKER_URL = 'https://jituchut.iownprince5.workers.dev/';
+    var video = document.getElementById('videoPlayer');
+    var videoWrapper = document.getElementById('videoWrapper');
+    var loadingOverlay = document.getElementById('loadingOverlay');
+    var errorOverlay = document.getElementById('errorOverlay');
+    var errorMessage = document.getElementById('errorMessage');
+    var player = null;
+    var hls = null;
+    var currentUrl = null;
+    function b64Decode(str) {
+        try {
+            var s = str.replace(/-/g, '+').replace(/_/g, '/');
+            while (s.length % 4) s += '=';
+            return decodeURIComponent(escape(window.atob(s)));
+        } catch (e) { return null; }
+    }
+    function looksLikeUrl(s) { return typeof s === 'string' && /^https?:\/\//i.test(s); }
+    function resolveRawParam(raw) {
+        if (!raw) return null;
+        var candidates = [raw];
+        try { candidates.push(decodeURIComponent(raw)); } catch (e) {}
+        candidates.slice().forEach(function (c) {
+            var b = b64Decode(c);
+            if (b) candidates.push(b);
+        });
+        for (var i = 0; i < candidates.length; i++) {
+            if (looksLikeUrl(candidates[i])) return candidates[i];
+        }
+        return null;
+    }
+    function getVideoUrl() {
+        var params = new URLSearchParams(window.location.search);
+        var raw = params.get('url') || params.get('src') || params.get('video');
+        if (raw) {
+            var resolved = resolveRawParam(raw);
+            if (resolved) return resolved;
+        }
+        var hash = window.location.hash ? window.location.hash.slice(1) : '';
+        if (hash) {
+            var resolvedHash = resolveRawParam(hash);
+            if (resolvedHash) return resolvedHash;
+        }
+        return null;
+    }
+    function showLoading() { loadingOverlay.classList.remove('hidden'); errorOverlay.classList.remove('visible'); }
+    function hideLoading() { loadingOverlay.classList.add('hidden'); }
+    function showError(msg) {
+        hideLoading();
+        errorMessage.textContent = msg || 'Unable to load the video.';
+        errorOverlay.classList.add('visible');
+    }
+    function hideError() { errorOverlay.classList.remove('visible'); }
+    function initPlyr() {
+        if (player) { try { player.destroy(); } catch (e) {} }
+        player = new Plyr(video, {
+            controls: [
+                'play-large', 'play', 'progress', 'current-time', 'duration',
+                'mute', 'volume', 'settings', 'pip', 'airplay', 'fullscreen'
+            ],
+            settings: ['quality', 'speed'],
+            speed: { selected: 1, options: [0.5, 0.75, 1, 1.25, 1.5, 2] },
+            keyboard: { focused: true, global: true },
+            tooltips: { controls: true, seek: true },
+            fullscreen: { enabled: true, fallback: true, iosNative: true },
+            clickToPlay: true,
+            storage: { enabled: false }
+        });
+        player.on('ready', hideLoading);
+        player.on('canplay', hideLoading);
+        player.on('waiting', showLoading);
+        player.on('error', function () { showError('Playback error occurred.'); });
+    }
+    async function processVideo(rawUrl) {
+        showLoading();
+        hideError();
+        if (!WORKER_URL) {
+            playVideo(rawUrl);
+            return;
+        }
+        var workerUrl = WORKER_URL + '?url=' + encodeURIComponent(rawUrl);
+        var isIOSNative = !window.Hls || !Hls.isSupported();
+        if (isIOSNative && video.canPlayType('application/vnd.apple.mpegurl')) {
+            playVideo(workerUrl);
+            return;
+        }
+        try {
+            var response = await fetch(workerUrl);
+            if (!response.ok) throw new Error('Worker returned status ' + response.status);
+            var contentType = response.headers.get('content-type') || '';
+            var streamUrl = null;
+            if (contentType.indexOf('application/json') !== -1) {
+                var data = await response.json();
+                streamUrl = data.url || data.video || data.stream || data.source;
+                if (!streamUrl) throw new Error('No video URL found in worker response');
+            } else if (
+                contentType.indexOf('video/') !== -1 ||
+                contentType.indexOf('application/x-mpegURL') !== -1 ||
+                contentType.indexOf('application/vnd.apple.mpegurl') !== -1
+            ) {
+                streamUrl = workerUrl; 
+            } else {
+                var text = await response.text();
+                streamUrl = text.trim().indexOf('http') === 0 ? text.trim() : workerUrl;
+            }
+            playVideo(streamUrl);
+        } catch (err) {
+            try { playVideo(workerUrl); }
+            catch (e) { showError('Failed to load video: ' + err.message); }
+        }
+    }
+    function playVideo(url) {
+        if (hls) { try { hls.destroy(); } catch (e) {} hls = null; }
+        if (player) { try { player.destroy(); } catch (e) {} player = null; }
+        if (url.toLowerCase().indexOf('m3u8') !== -1) {
+            playHls(url);
+        } else {
+            playDirect(url);
+        }
+    }
+    function playHls(url) {
+        showLoading();
+        if (window.Hls && Hls.isSupported()) {
+            video.setAttribute('crossorigin', 'anonymous');
+            hls = new Hls({
+                enableWorker: true,
+                lowLatencyMode: true,
+                backBufferLength: 90,
+                maxBufferLength: 30,
+                manifestLoadingMaxRetry: 4,
+                levelLoadingMaxRetry: 4,
+                fragLoadingMaxRetry: 6
+            });
+            hls.loadSource(url);
+            hls.attachMedia(video);
+            hls.on(Hls.Events.MANIFEST_PARSED, function () {
+                initPlyr();
+                hideLoading();
+                video.play().catch(function (e) {});
+            });
+            hls.on(Hls.Events.ERROR, function (evt, data) {
+                if (!data.fatal) return;
+                switch (data.type) {
+                    case Hls.ErrorTypes.NETWORK_ERROR:
+                        hls.startLoad();
+                        break;
+                    case Hls.ErrorTypes.MEDIA_ERROR:
+                        hls.recoverMediaError();
+                        break;
+                    default:
+                        showError('Stream error: ' + (data.details || 'playback failed'));
+                        hls.destroy();
+                        hls = null;
+                }
+            });
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            video.removeAttribute('crossorigin');
+            video.src = url;
+            initPlyr();
+            video.addEventListener('loadedmetadata', function () {
+                hideLoading();
+                video.play().catch(function (e) {});
+            }, { once: true });
+        } else {
+            showError('HLS playback is not supported in this browser.');
+        }
+    }
+    function playDirect(url) {
+        showLoading();
+        video.src = url;
+        initPlyr();
+        var started = false;
+        video.addEventListener('canplay', function () {
+            if (started) return;
+            started = true;
+            hideLoading();
+            video.play().catch(function () {});
+        }, { once: true });
+        video.addEventListener('error', function () {
+            var code = video.error && video.error.code;
+            var msg = 'Playback failed.';
+            if (code === 2) msg = 'Network error while loading the video.';
+            if (code === 3) msg = 'Video could not be decoded.';
+            if (code === 4) msg = 'Video format is not supported.';
+            showError(msg);
+        }, { once: true });
+        video.load();
+    }
+    window.retryLoad = function () {
+        hideError();
+        if (currentUrl) processVideo(currentUrl);
+    };
+    document.addEventListener('keydown', function (e) {
+        if (['INPUT', 'TEXTAREA'].indexOf(document.activeElement.tagName) !== -1) return;
+        if (e.code === 'Space') { e.preventDefault(); if (player) player.togglePlay(); }
+        else if (e.code === 'KeyF') { if (player) player.toggleFullscreen(); }
+        else if (e.code === 'KeyM') { if (player) player.toggleMute(); }
+        else if (e.code === 'ArrowLeft') { video.currentTime = Math.max(0, video.currentTime - 5); }
+        else if (e.code === 'ArrowRight') { video.currentTime = Math.min(video.duration || 1e9, video.currentTime + 5); }
+    });
+    var url = getVideoUrl();
+    if (!url) {
+        videoWrapper.innerHTML = '<div class="no-src">No video URL provided.<br>Add <code>?url=&lt;video-url&gt;</code> to the page address.</div>';
+    } else {
+        currentUrl = url;
+        processVideo(url);
+    }
+})();
+</script>
+<script>
+(function() {
+  var obs = new IntersectionObserver(function(entries) { entries.forEach(function(e, i) { if (e.isIntersecting) { setTimeout(function() { e.target.classList.add('on'); }, i * 60); obs.unobserve(e.target); } }); }, { threshold: 0.06, rootMargin: '0px 0px -24px 0px' });
+  document.querySelectorAll('.rv').forEach(function(el) { obs.observe(el); });
+})();
+(function() {
+  var ham = document.getElementById('ham'); var drawer = document.getElementById('drawer'); if (!ham || !drawer) return;
+  ham.addEventListener('click', function(e) { e.stopPropagation(); drawer.classList.toggle('open'); ham.textContent = drawer.classList.contains('open') ? '✕' : '☰'; });
+  function cd() { drawer.classList.remove('open'); ham.textContent = '☰'; }
+  document.addEventListener('click', function(e) { if (!ham.contains(e.target) && !drawer.contains(e.target)) cd(); });
+  document.addEventListener('touchstart', function(e) { if (!ham.contains(e.target) && !drawer.contains(e.target)) cd(); }, { passive: true });
+  window.cd = cd;
+})();
+(function() {
+  document.querySelectorAll('.faqq').forEach(function(q) { q.addEventListener('click', function() { var item = q.parentElement; var wasOpen = item.classList.contains('open'); document.querySelectorAll('.faqitem').forEach(function(i) { i.classList.remove('open'); }); if (!wasOpen) item.classList.add('open'); }); });
+})();
+</script>   
+</body>
+</html>

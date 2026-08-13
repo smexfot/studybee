@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <title>StudyBee 🐝 | Welcome</title>
+    <meta name="description" content="Education must be free for everyone.">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="StudyBee 🐝 | Welcome">
+    <meta property="og:image" content="https://i.ibb.co/yF4mhNPB/f493d534-fbf8-4b31-b741-83b343f8a9e1.jpg">
+    <meta property="og:type" content="website">
+    
+    <!-- Comprehensive Favicon Tags -->
+    <link rel="icon" href="https://i.ibb.co/kgcqpSpk/F6-AC29-BD-0-E66-4-BFC-AAE6-121-FDE088-FAA.png" type="image/png">
+    <link rel="shortcut icon" href="https://i.ibb.co/kgcqpSpk/F6-AC29-BD-0-E66-4-BFC-AAE6-121-FDE088-FAA.png" type="image/png">
+    <link rel="apple-touch-icon" href="https://i.ibb.co/kgcqpSpk/F6-AC29-BD-0-E66-4-BFC-AAE6-121-FDE088-FAA.png">
+    
+    <!-- External Dependencies: Tailwind, Lucide, Google Fonts -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #030303; /* Pure dark like the screenshot */
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; /* Fallback for UI elements */
+            background-color: var(--bg-color);
+            color: #e4e4e7; 
+            scroll-behavior: smooth; 
+            -webkit-tap-highlight-color: transparent;
+            overflow-x: hidden;
+        }
+
+        /* Serif Font Class */
+        .font-serif-premium {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        /* Bouncy Spring Animation */
+        @keyframes springPop {
+            0% { opacity: 0; transform: scale(0.6) translateY(40px); }
+            50% { opacity: 1; transform: scale(1.05) translateY(-10px); }
+            70% { transform: scale(0.98) translateY(5px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .animate-pop-in {
+            animation: springPop 0.8s cubic-bezier(0.28, 0.84, 0.42, 1) forwards;
+            opacity: 0;
+        }
+
+        /* Smooth floating animation for the main logo */
+        @keyframes levitate {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        .animate-levitate { animation: levitate 4s ease-in-out infinite; }
+
+        /* Card Hover Effect */
+        .platform-card { 
+            transition: all 0.3s ease; 
+        }
+        .platform-card:hover {
+            transform: translateY(-5px);
+            background-color: #121215;
+            border-color: rgba(251, 191, 36, 0.2); /* Slight amber border on hover */
+        }
+        .platform-card:active {
+            transform: scale(0.96);
+        }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="min-h-[100dvh] selection:bg-amber-400/30 relative flex flex-col items-center pb-10">
+    
+    <!-- Subtle top & center yellow glow -->
+    <div class="fixed top-[-10%] left-1/2 -translate-x-1/2 w-[400px] sm:w-[600px] h-[300px] sm:h-[400px] bg-yellow-500/20 rounded-full blur-[120px] pointer-events-none z-[-1]"></div>
+    <div class="fixed top-[40%] left-1/2 -translate-x-1/2 w-[300px] sm:w-[800px] h-[400px] sm:h-[600px] bg-yellow-500/10 rounded-full blur-[150px] pointer-events-none z-[-1]"></div>
+    
+    <main class="w-full max-w-5xl mx-auto px-4 py-8 sm:py-12 flex flex-col items-center justify-center relative z-10 flex-1">
+        
+        <!-- Header Section -->
+        <div class="text-center mb-10 w-full flex-shrink-0 relative">
+            
+            <!-- Logo -->
+            <div class="relative w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-6 animate-pop-in" style="animation-delay: 50ms;">
+                <div class="animate-levitate w-full h-full relative">
+                    <div class="absolute inset-[-4px] rounded-full bg-amber-500/30 blur-[10px]"></div>
+                    <div class="relative w-full h-full bg-zinc-950 rounded-full p-1 z-10 border border-zinc-800">
+                        <img src="https://i.ibb.co/yF4mhNPB/f493d534-fbf8-4b31-b741-83b343f8a9e1.jpg" alt="StudyBee Logo" class="w-full h-full object-cover rounded-full" />
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Welcome Title -->
+            <h1 class="text-[2.5rem] sm:text-[3.5rem] font-serif-premium font-bold text-white mb-2 leading-[1.1] flex flex-col items-center justify-center animate-pop-in drop-shadow-2xl" style="animation-delay: 150ms;">
+                <span>Welcome to</span>
+                <span class="text-amber-400 mt-1">Study Bee</span>
+            </h1>
+            
+            <!-- Subtitle -->
+            <p class="text-zinc-300 font-serif-premium text-sm sm:text-base mt-4 font-medium tracking-wide animate-pop-in" style="animation-delay: 250ms;">
+                Education Must Be <span class="text-amber-400 font-bold">Free</span> For Everyone
+            </p>
+        </div>
+
+        <!-- Platforms Grid (2 cols mobile, 4 cols PC) -->
+        <div id="platforms-container" class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-5 md:gap-6 w-full max-w-sm md:max-w-3xl lg:max-w-4xl mx-auto z-10">
+            
+            <!-- 1. Next Topper -->
+            <a href="https://nt.studybeepro.site" class="bg-[#0a0a0c] border border-zinc-800/80 p-5 rounded-3xl platform-card flex flex-col items-center justify-center gap-3 cursor-pointer animate-pop-in group" style="animation-delay: 500ms;">
+                <div class="w-16 h-16 sm:w-[72px] sm:h-[72px] rounded-[1.25rem] border-2 border-amber-400 bg-zinc-950 p-1 flex items-center justify-center group-hover:shadow-[0_0_15px_rgba(251,191,36,0.3)] transition-all">
+                    <img src="https://i.ibb.co/Lzkbgnhz/IMG-4138.png" alt="Next Topper" class="w-full h-full object-contain rounded-xl">
+                </div>
+                <h2 class="text-white font-serif-premium font-bold text-[13px] sm:text-[15px] text-center tracking-wide group-hover:text-amber-400 transition-colors">Next Topper</h2>
+            </a>
+
+            <!-- 2. Mission Jeet -->
+            <a href="https://studybeepro.site/mj" class="bg-[#0a0a0c] border border-zinc-800/80 p-5 rounded-3xl platform-card flex flex-col items-center justify-center gap-3 cursor-pointer animate-pop-in group" style="animation-delay: 550ms;">
+                <div class="w-16 h-16 sm:w-[72px] sm:h-[72px] rounded-[1.25rem] border-2 border-amber-400 bg-zinc-950 p-1 flex items-center justify-center group-hover:shadow-[0_0_15px_rgba(251,191,36,0.3)] transition-all">
+                    <img src="https://i.ibb.co/R4gdNrGJ/IMG-4136.png" alt="Mission Jeet" class="w-full h-full object-contain rounded-xl">
+                </div>
+                <h2 class="text-white font-serif-premium font-bold text-[13px] sm:text-[15px] text-center tracking-wide group-hover:text-amber-400 transition-colors">Mission Jeet</h2>
+            </a>
+
+            <!-- 3. Bee Books -->
+            <a href="https://books.studybeepro.site" class="bg-[#0a0a0c] border border-zinc-800/80 p-5 rounded-3xl platform-card flex flex-col items-center justify-center gap-3 cursor-pointer animate-pop-in group" style="animation-delay: 600ms;">
+                <div class="w-16 h-16 sm:w-[72px] sm:h-[72px] rounded-[1.25rem] border-2 border-amber-400 bg-zinc-950 p-1 flex items-center justify-center group-hover:shadow-[0_0_15px_rgba(251,191,36,0.3)] transition-all overflow-hidden">
+                    <img src="https://i.ibb.co/S4NNmf24/IMG-4274.png" alt="Bee Books" class="w-full h-full object-cover rounded-xl">
+                </div>
+                <h2 class="text-white font-serif-premium font-bold text-[13px] sm:text-[15px] text-center tracking-wide group-hover:text-amber-400 transition-colors">Bee Books</h2>
+            </a>
+
+            <!-- 4. Unacademy Offline -->
+            <a href="https://unc.studybeepro.site/of-unc" class="bg-[#0a0a0c] border border-zinc-800/80 p-5 rounded-3xl platform-card flex flex-col items-center justify-center gap-3 cursor-pointer animate-pop-in group" style="animation-delay: 650ms;">
+                <div class="w-16 h-16 sm:w-[72px] sm:h-[72px] rounded-[1.25rem] border-2 border-amber-400 bg-zinc-950 p-1 flex items-center justify-center group-hover:shadow-[0_0_15px_rgba(251,191,36,0.3)] transition-all">
+                    <img src="https://i.ibb.co/yF4mhNPB/f493d534-fbf8-4b31-b741-83b343f8a9e1.jpg" alt="UNC Offline" class="w-full h-full object-cover rounded-xl">
+                </div>
+                <h2 class="text-white font-serif-premium font-bold text-[13px] sm:text-[15px] text-center tracking-wide group-hover:text-amber-400 transition-colors">UNC Offline</h2>
+            </a>
+
+            <!-- 5. Unacademy -->
+            <a href="https://uncs.pages.dev/" class="bg-[#0a0a0c] border border-zinc-800/80 p-5 rounded-3xl platform-card flex flex-col items-center justify-center gap-3 cursor-pointer animate-pop-in group" style="animation-delay: 700ms;">
+                <div class="w-16 h-16 sm:w-[72px] sm:h-[72px] rounded-[1.25rem] border-2 border-amber-400 bg-zinc-950 p-1 flex items-center justify-center group-hover:shadow-[0_0_15px_rgba(251,191,36,0.3)] transition-all">
+                    <img src="https://i.ibb.co/yF4mhNPB/f493d534-fbf8-4b31-b741-83b343f8a9e1.jpg" alt="UNC" class="w-full h-full object-cover rounded-xl">
+                </div>
+                <h2 class="text-white font-serif-premium font-bold text-[13px] sm:text-[15px] text-center tracking-wide group-hover:text-amber-400 transition-colors">UNC</h2>
+            </a>
+
+            <!-- 6. Rojgar With Ankit -->
+            <a href="https://rwa.studybeepro.site/rwax" class="bg-[#0a0a0c] border border-zinc-800/80 p-5 rounded-3xl platform-card flex flex-col items-center justify-center gap-3 cursor-pointer animate-pop-in group" style="animation-delay: 750ms;">
+                <div class="w-16 h-16 sm:w-[72px] sm:h-[72px] rounded-[1.25rem] border-2 border-amber-400 bg-zinc-950 p-1 flex items-center justify-center group-hover:shadow-[0_0_15px_rgba(251,191,36,0.3)] transition-all overflow-hidden">
+                    <img src="https://i.ibb.co/rPSSc1D/IMG-4132.png" alt="Rojgar With Ankit" class="w-full h-full object-cover rounded-xl">
+                </div>
+                <h2 class="text-white font-serif-premium font-bold text-[13px] sm:text-[15px] text-center tracking-wide group-hover:text-amber-400 transition-colors">Rojgar W/ Ankit</h2>
+            </a>
+
+            <!-- 7. Selection Bee -->
+            <a href="https://studybeepro.site/selectionbee" class="bg-[#0a0a0c] border border-zinc-800/80 p-5 rounded-3xl platform-card flex flex-col items-center justify-center gap-3 cursor-pointer animate-pop-in group" style="animation-delay: 800ms;">
+                <div class="w-16 h-16 sm:w-[72px] sm:h-[72px] rounded-[1.25rem] border-2 border-amber-400 bg-zinc-950 p-1 flex items-center justify-center group-hover:shadow-[0_0_15px_rgba(251,191,36,0.3)] transition-all overflow-hidden">
+                    <img src="https://i.ibb.co/F4yHhxyF/IMG-4135.png" alt="Selection Bee" class="w-full h-full object-cover rounded-xl">
+                </div>
+                <h2 class="text-white font-serif-premium font-bold text-[13px] sm:text-[15px] text-center tracking-wide group-hover:text-amber-400 transition-colors">Selection Bee</h2>
+            </a>
+
+            <!-- 8. Vibrant Academy -->
+            <a href="https://studybeepro.site/vibrante" class="bg-[#0a0a0c] border border-zinc-800/80 p-5 rounded-3xl platform-card flex flex-col items-center justify-center gap-3 cursor-pointer animate-pop-in group" style="animation-delay: 850ms;">
+                <div class="w-16 h-16 sm:w-[72px] sm:h-[72px] rounded-[1.25rem] border-2 border-amber-400 bg-zinc-950 p-1 flex items-center justify-center group-hover:shadow-[0_0_15px_rgba(251,191,36,0.3)] transition-all overflow-hidden">
+                    <img src="https://i.ibb.co/LdRFR4WG/IMG-4218.png" alt="Vibrant Academy" class="w-full h-full object-cover rounded-xl">
+                </div>
+                <h2 class="text-white font-serif-premium font-bold text-[13px] sm:text-[15px] text-center tracking-wide group-hover:text-amber-400 transition-colors">Vibrant Academy</h2>
+            </a>
+
+            <!-- 9. Physics Wallah -->
+            <a href="https://pw.studybeepro.site" class="bg-[#0a0a0c] border border-zinc-800/80 p-5 rounded-3xl platform-card flex flex-col items-center justify-center gap-3 cursor-pointer animate-pop-in group" style="animation-delay: 900ms;">
+                <div class="w-16 h-16 sm:w-[72px] sm:h-[72px] rounded-[1.25rem] border-2 border-amber-400 bg-zinc-950 p-1 flex items-center justify-center group-hover:shadow-[0_0_15px_rgba(251,191,36,0.3)] transition-all">
+                    <img src="https://i.ibb.co/h1YdY795/IMG-4134.png" alt="Physics Wallah" class="w-full h-full object-contain rounded-xl">
+                </div>
+                <h2 class="text-white font-serif-premium font-bold text-[13px] sm:text-[15px] text-center tracking-wide group-hover:text-amber-400 transition-colors">Physics Wallah</h2>
+            </a>
+
+        </div>
+
+        <!-- SEO / Screen Reader Optimized Content (Visually Hidden) -->
+        <article class="sr-only">
+            <h2>About StudyBee - The Best Free Education Platform in India</h2>
+            <p>StudyBee is a revolutionary educational ecosystem dedicated to making high-quality education free for everyone. We believe that financial constraints should never stop a student from achieving their dreams. Access premium study content, live classes, PDF notes, and mock tests from India's top educators and platforms all in one unified portal.</p>
+            
+            <h3>Top Coaching Institutes and Portals Available:</h3>
+            <ul>
+                <li><strong>Next Topper:</strong> Best study material and test series for board and competitive exams.</li>
+                <li><strong>Mission Jeet:</strong> Focused batches for ultimate success in your exams.</li>
+                <li><strong>Bee Books:</strong> Comprehensive digital library for all your study material needs.</li>
+                <li><strong>Unacademy & Unacademy Offline (UNC Offline):</strong> India's largest learning platform for UPSC, SSC, IIT JEE, NEET, and more.</li>
+                <li><strong>Rojgar With Ankit (RWA):</strong> Top-tier preparation for UP Police, Delhi Police, SSC GD, and other government job exams.</li>
+                <li><strong>Selection Bee:</strong> Dedicated preparation portal for securing government jobs.</li>
+                <li><strong>Vibrant Academy:</strong> Premier coaching for IIT JEE (Main & Advanced) and Pre-Medical (NEET).</li>
+                <li><strong>Physics Wallah (PW):</strong> Affordable and high-quality education by Alakh Pandey for JEE, NEET, NDA, and board exams.</li>
+            </ul>
+
+            <h3>Why Choose StudyBee?</h3>
+            <p>Prepare for top competitive exams like IIT JEE, NEET UG, SSC CGL, CHSL, UPSC, NDA, state board exams, and government job preparations with the best online coaching materials. Whether you are looking for free online classes, live doubt solving, or comprehensive test series, StudyBee connects you to the right resources. Join the StudyBee ecosystem today because education must be free for everyone!</p>
+        </article>
+    </main>
+
+    <footer class="w-full py-4 text-center mt-6 relative z-10 flex-shrink-0 animate-pop-in" style="animation-delay: 1000ms;">
+        <p class="text-zinc-600 text-[10px] font-medium tracking-widest uppercase">© 2026 StudyBee Ecosystem</p>
+    </footer>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+    </script>
+</body>
+</html>

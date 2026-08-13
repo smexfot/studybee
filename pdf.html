@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium PDF Fetcher</title>
+    <!-- Tailwind CSS via CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #03040a;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            box-shadow: 0 0 40px rgba(212, 175, 55, 0.05);
+        }
+        
+        .text-gold {
+            background: linear-gradient(to right, #D4AF37, #fef08a);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        
+        .btn-gold {
+            background: linear-gradient(to right, #D4AF37, #eab308);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-gold:hover:not(:disabled) {
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
+            transform: translateY(-1px);
+        }
+        
+        /* Custom Scrollbar for aesthetic */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #03040a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #D4AF37;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 text-white overflow-hidden relative">
+
+    <!-- Subtle Background Glow -->
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#D4AF37] opacity-[0.03] blur-[100px] rounded-full pointer-events-none"></div>
+
+    <!-- Main Container -->
+    <div class="glass-panel w-full max-w-lg rounded-2xl p-8 relative z-10">
+        
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gold mb-2 tracking-wide">PDF DOWNLOADER</h1>
+            <p class="text-gray-400 text-sm">Paste your direct PDF link to fetch securely.</p>
+        </div>
+
+        <!-- Form -->
+        <form id="downloadForm" class="space-y-6">
+            <div class="relative">
+                <input
+                    type="url"
+                    id="pdfUrl"
+                    required
+                    placeholder="https://example.com/document.pdf"
+                    class="w-full px-5 py-4 bg-black/40 border border-[#D4AF37]/30 rounded-xl focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] transition-all placeholder-gray-600 text-gray-100"
+                >
+            </div>
+
+            <button
+                type="submit"
+                id="submitBtn"
+                class="btn-gold w-full flex items-center justify-center space-x-2 text-black font-bold py-4 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+                <svg id="btnIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="7 10 12 15 17 10"/>
+                    <line x1="12" x2="12" y1="15" y2="3"/>
+                </svg>
+                <span id="btnText">Download PDF</span>
+            </button>
+        </form>
+
+        <!-- Status Message -->
+        <div id="statusMsg" class="mt-6 text-center text-sm font-medium hidden text-[#D4AF37]"></div>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Tumhara specific worker URL
+        const WORKER_URL = "https://pdf.iownprince5.workers.dev/";
+
+        document.getElementById('downloadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const urlInput = document.getElementById('pdfUrl').value;
+            const submitBtn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+            const btnIcon = document.getElementById('btnIcon');
+            const statusMsg = document.getElementById('statusMsg');
+
+            if (!urlInput) return;
+
+            // Loading state on
+            submitBtn.disabled = true;
+            btnText.innerText = "Fetching...";
+            btnIcon.style.display = "none"; 
+            statusMsg.innerText = "Connecting to proxy server...";
+            statusMsg.classList.remove('hidden');
+            statusMsg.classList.add('animate-pulse');
+
+            try {
+                // Worker ko POST request bhejna
+                const response = await fetch(WORKER_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ url: urlInput })
+                });
+
+                if (!response.ok) throw new Error('Worker failed to process the request.');
+
+                // Blob handling and forced download
+                const blob = await response.blob();
+                const downloadUrl = window.URL.createObjectURL(blob);
+                
+                const link = document.createElement('a');
+                link.href = downloadUrl;
+                // Ek unique name generate kar rahe hain download ke liye
+                link.download = `Document_${Date.now()}.pdf`;
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+                window.URL.revokeObjectURL(downloadUrl);
+
+                // Success state
+                statusMsg.innerText = "Download Successful!";
+                document.getElementById('pdfUrl').value = ''; // Input clear karna
+                
+            } catch (error) {
+                console.error("Download Error:", error);
+                statusMsg.innerText = "Error: Invalid link or CORS restriction on target.";
+            } finally {
+                // Reset state
+                submitBtn.disabled = false;
+                btnText.innerText = "Download PDF";
+                btnIcon.style.display = "block";
+                statusMsg.classList.remove('animate-pulse');
+                
+                // Hide message after 4 seconds
+                setTimeout(() => {
+                    statusMsg.classList.add('hidden');
+                }, 4000);
+            }
+        });
+    </script>
+</body>
+</html>
