@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Study Bee | futurekul</title>
+  
+  <!-- Icons & Video Player Support -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Tailwind Configuration -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              400: '#facc15', // Yellow 400
+              500: '#eab308', // Yellow 500 (Main)
+              600: '#ca8a04', // Yellow 600
+            },
+            neutral: {
+              850: '#1f1f1f',
+              900: '#171717',
+              950: '#0a0a0a',
+            }
+          },
+          animation: {
+            'spin-slow': 'spin 3s linear infinite',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+    
+    /* Smooth entrance animations */
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-card {
+      animation: fadeSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      opacity: 0;
+    }
+
+    body {
+      background-color: #0a0a0a;
+      background-image: 
+        radial-gradient(circle at 15% 50%, rgba(234, 179, 8, 0.04), transparent 25%),
+        radial-gradient(circle at 85% 30%, rgba(202, 138, 4, 0.04), transparent 25%);
+      color: #f5f5f5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Hide scrollbar for cleaner UI */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0a0a0a; 
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #262626; 
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #404040; 
+    }
+
+    .glass-nav {
+      background: rgba(10, 10, 10, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .glass-panel {
+      background: linear-gradient(180deg, rgba(23, 23, 23, 0.8), rgba(10, 10, 10, 0.9));
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(20px);
+    }
+    
+    .line-clamp-2 {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;  
+      overflow: hidden;
+    }
+
+    /* Player cinematic glow */
+    .player-glow {
+      box-shadow: 0 0 60px -15px rgba(234, 179, 8, 0.15), 0 20px 40px -10px rgba(0,0,0,0.5);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <header class="glass-nav sticky top-0 z-50 w-full transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+      
+      <!-- Logo & Branding -->
+      <div class="flex items-center gap-3 cursor-pointer" onclick="goHome()" title="Go Home">
+        <div class="w-12 h-12 bg-neutral-900 rounded-xl border border-brand-500/30 flex items-center justify-center shadow-[0_0_15px_rgba(234,179,8,0.2)] overflow-hidden">
+          <img src="https://i.ibb.co/yF4mhNPB/f493d534-fbf8-4b31-b741-83b343f8a9e1.jpg" alt="Study Bee Logo" class="w-full h-full object-cover" />
+        </div>
+        <div>
+          <h1 class="text-xl font-black tracking-tight text-white leading-tight">Study Bee</h1>
+          <p class="text-[11px] text-brand-500 font-semibold tracking-wider uppercase">Powered by Study Bee EdTech</p>
+        </div>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="w-full sm:w-96 relative group">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-neutral-400 group-focus-within:text-brand-500 transition-colors">
+          <i data-lucide="search" class="w-5 h-5"></i>
+        </div>
+        <input 
+          id="searchInput" 
+          type="text" 
+          placeholder="Search courses..." 
+          class="w-full bg-neutral-900/80 border border-neutral-800 text-white rounded-full py-2.5 pl-10 pr-4 focus:outline-none focus:border-brand-500/50 focus:ring-1 focus:ring-brand-500/50 transition-all placeholder-neutral-500 text-sm"
+        />
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-6">
+    
+    <!-- ================= HOME VIEW ================= -->
+    <div id="homeView" class="glass-panel rounded-3xl p-6 sm:p-8 animate-in fade-in duration-500">
+      <div class="flex justify-between items-end mb-8">
+        <div>
+          <h2 class="text-2xl sm:text-3xl font-black text-white">Available Courses</h2>
+          <p id="courseCount" class="text-neutral-400 mt-1 text-sm font-medium">Loading...</p>
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      <div id="homeLoading" class="flex flex-col items-center justify-center py-20 text-brand-500">
+        <i data-lucide="loader-2" class="w-10 h-10 animate-spin mb-4"></i>
+        <p class="text-neutral-400 font-medium">Fetching courses from hive...</p>
+      </div>
+
+      <!-- Course Grid -->
+      <div id="courseGrid" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <!-- JS Injected Cards -->
+      </div>
+    </div>
+
+    <!-- ================= COURSE VIEW ================= -->
+    <div id="courseView" class="hidden flex-col gap-6 animate-in slide-in-from-right-8 duration-300">
+      
+      <!-- Back Button -->
+      <div>
+        <button id="backBtn" class="group flex items-center gap-2 text-neutral-400 hover:text-white transition-colors bg-neutral-900/50 px-4 py-2 rounded-full border border-neutral-800 hover:border-neutral-700 w-max">
+          <i data-lucide="arrow-left" class="w-4 h-4 group-hover:-translate-x-1 transition-transform"></i>
+          <span class="text-sm font-semibold">Back to Courses</span>
+        </button>
+      </div>
+
+      <div class="glass-panel rounded-3xl overflow-hidden shadow-xl">
+        <!-- Course Hero -->
+        <div class="relative p-6 sm:p-10 border-b border-neutral-800/50 bg-gradient-to-br from-neutral-900 to-neutral-950">
+          <div class="absolute top-0 right-0 p-12 opacity-5 pointer-events-none">
+             <svg width="200" height="200" viewBox="0 0 100 100" class="fill-brand-500"><path d="M50 5 L93 30 L93 70 L50 95 L7 70 L7 30 Z"/></svg>
+          </div>
+          
+          <div class="relative z-10 flex flex-col sm:flex-row items-start sm:items-center gap-6">
+            <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-brand-500/10 border border-brand-500/20 p-4 shrink-0 flex items-center justify-center text-brand-500 shadow-lg">
+               <i data-lucide="book-open" class="w-full h-full"></i>
+            </div>
+            <div>
+              <h2 id="courseTitle" class="text-2xl sm:text-4xl font-black text-white leading-tight mb-3">Course Title</h2>
+              <div id="courseTags" class="flex flex-wrap gap-2 mb-4">
+                <!-- JS injected tags -->
+              </div>
+              <p id="courseSummary" class="text-neutral-400 text-sm max-w-2xl leading-relaxed"></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Course Content (Tabs & Lists) -->
+        <div class="p-6 sm:p-10">
+          
+          <!-- Tabs -->
+          <div class="flex gap-3 mb-8 bg-neutral-900/50 p-1.5 rounded-xl w-max border border-neutral-800/50">
+            <button id="lecturesTab" class="tab-btn px-6 py-2.5 rounded-lg text-sm font-bold flex items-center gap-2 transition-all active-tab">
+              <i data-lucide="play-square" class="w-4 h-4"></i> Lectures
+            </button>
+            <button id="pdfTab" class="tab-btn px-6 py-2.5 rounded-lg text-sm font-bold flex items-center gap-2 text-neutral-400 hover:text-white transition-all">
+              <i data-lucide="file-text" class="w-4 h-4"></i> PDF Notes
+            </button>
+          </div>
+
+          <!-- Lectures Section -->
+          <div id="lecturesSection" class="animate-in fade-in">
+            <div class="flex items-center justify-between mb-4">
+              <h4 class="text-lg font-bold text-white">Curriculum</h4>
+              <span id="lectureCount" class="text-xs font-bold uppercase tracking-wider text-neutral-500 bg-neutral-900 px-3 py-1 rounded-full border border-neutral-800">0 items</span>
+            </div>
+            <div id="lectureList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              <!-- JS Injected Lectures -->
+            </div>
+          </div>
+
+          <!-- PDF Section -->
+          <div id="pdfSection" class="hidden animate-in fade-in">
+             <div class="flex items-center justify-between mb-4">
+              <h4 class="text-lg font-bold text-white">Study Materials</h4>
+              <span id="pdfCount" class="text-xs font-bold uppercase tracking-wider text-neutral-500 bg-neutral-900 px-3 py-1 rounded-full border border-neutral-800">0 items</span>
+            </div>
+            <div id="pdfList" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- JS Injected PDFs -->
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= PLAYER VIEW ================= -->
+    <div id="playerView" class="hidden flex-col gap-4 animate-in zoom-in-95 duration-300">
+      
+      <!-- Top controls -->
+      <div class="flex items-center justify-between">
+        <button id="playerBackBtn" class="group flex items-center gap-2 text-neutral-400 hover:text-white transition-colors bg-neutral-900/50 px-4 py-2 rounded-full border border-neutral-800 hover:border-neutral-700">
+          <i data-lucide="arrow-left" class="w-4 h-4 group-hover:-translate-x-1 transition-transform"></i>
+          <span class="text-sm font-semibold">Back to Curriculum</span>
+        </button>
+      </div>
+
+      <!-- Player Container -->
+      <div class="glass-panel rounded-[2rem] overflow-hidden player-glow border border-brand-500/20 bg-neutral-950 flex flex-col">
+        
+        <!-- The actual video frame -->
+        <div id="videoContainer" class="relative w-full aspect-video bg-black flex items-center justify-center overflow-hidden">
+          
+          <video id="videoPlayer" controls playsinline class="hidden w-full h-full object-contain"></video>
+          <iframe id="ytPlayer" class="hidden w-full h-full border-0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+          
+          <!-- Empty/Loading State -->
+          <div id="playerEmpty" class="absolute inset-0 flex flex-col items-center justify-center bg-neutral-950 text-neutral-500 z-10">
+            <i data-lucide="loader-2" class="w-12 h-12 animate-spin mb-4 text-brand-500"></i>
+            <p class="font-medium">Initializing Player...</p>
+          </div>
+        </div>
+
+        <!-- Custom Video Controls (Quality, Speed, Fullscreen) -->
+        <div id="customVideoControls" class="hidden w-full bg-neutral-900/60 border-t border-neutral-800/80 p-3 sm:px-6 flex flex-wrap items-center gap-4 text-sm justify-between backdrop-blur-md">
+            <div class="flex flex-wrap items-center gap-4">
+                <!-- Quality -->
+                <div class="flex items-center gap-2">
+                    <i data-lucide="settings-2" class="w-4 h-4 text-neutral-400"></i>
+                    <select id="qualitySelect" class="bg-neutral-800 text-white rounded-lg px-3 py-1.5 border border-neutral-700 outline-none cursor-pointer hover:border-brand-500/50 transition-colors focus:ring-1 focus:ring-brand-500/50 min-w-[90px] text-sm">
+                        <option value="-1">Auto Quality</option>
+                    </select>
+                </div>
+                <!-- Speed -->
+                <div class="flex items-center gap-2">
+                    <i data-lucide="gauge" class="w-4 h-4 text-neutral-400"></i>
+                    <select id="speedSelect" class="bg-neutral-800 text-white rounded-lg px-3 py-1.5 border border-neutral-700 outline-none cursor-pointer hover:border-brand-500/50 transition-colors focus:ring-1 focus:ring-brand-500/50 min-w-[90px] text-sm">
+                        <option value="0.5">0.5x</option>
+                        <option value="0.75">0.75x</option>
+                        <option value="1" selected>1.0x Normal</option>
+                        <option value="1.25">1.25x</option>
+                        <option value="1.5">1.5x</option>
+                        <option value="2">2.0x</option>
+                    </select>
+                </div>
+            </div>
+            <!-- Fullscreen / Landscape -->
+            <button id="fullscreenBtn" class="flex items-center gap-2 bg-brand-500 hover:bg-brand-400 text-neutral-950 font-bold px-4 py-1.5 rounded-lg transition-colors shadow-[0_0_15px_rgba(234,179,8,0.2)]">
+                <i data-lucide="maximize" class="w-4 h-4"></i> Fullscreen
+            </button>
+        </div>
+
+        <!-- Player Details -->
+        <div class="p-6 sm:p-8 flex flex-col md:flex-row md:items-start justify-between gap-6 border-t border-neutral-800/50 bg-neutral-900/30">
+          <div class="flex-1">
+            <div class="flex items-center gap-3 mb-2">
+               <span class="px-2.5 py-1 text-[10px] font-black uppercase tracking-wider bg-brand-500/10 text-brand-400 rounded-md border border-brand-500/20">Now Playing</span>
+            </div>
+            <h2 id="playerTitle" class="text-2xl sm:text-3xl font-black text-white leading-tight mb-2">Lecture Title</h2>
+            <p id="playerSub" class="text-brand-400 text-sm font-semibold mb-4">Instructor Name • Subject</p>
+            <p id="playerInfo" class="text-neutral-400 text-sm leading-relaxed max-w-3xl">Video is ready to play.</p>
+          </div>
+          
+          <div class="flex shrink-0 gap-3">
+             <button id="closePlayerBtn" class="flex items-center gap-2 px-6 py-3 bg-neutral-800 hover:bg-neutral-700 text-white rounded-xl font-bold text-sm transition-colors border border-neutral-700 hover:border-neutral-600">
+               <i data-lucide="x" class="w-4 h-4"></i> Close
+             </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="py-6 text-center text-neutral-500 text-sm border-t border-neutral-900 mt-auto">
+    <p>Designed and Developed for <span class="text-brand-500 font-bold">Study Bee EdTech</span> &copy; 2026</p>
+  </footer>
+
+  <script>
+    // Initialize Icons
+    lucide.createIcons();
+
+    // Configuration & APIs
+    const COURSE_API_1 = "https://www.futurekul.com/admin/api/course/135/1/";
+    const COURSE_API_2 = "https://www.futurekul.com/admin/api/course/135/0/";
+    const COURSE_DATA_API = (id) => `https://www.futurekul.com/admin/api/getCourseDataByTopic-v2/${id}/`;
+    
+    // Fallback images
+    const IMG_FALLBACK = "https://placehold.co/800x500/171717/eab308?text=Study+Bee+Course";
+
+    // App State
+    const state = {
+      allCourses: [],
+      filteredCourses: [],
+      currentCourse: null,
+      currentLectures: [],
+      currentPdfTopics: [],
+      currentLecture: null,
+      currentHls: null
+    };
+
+    // DOM Elements Map
+    const el = {
+      homeView: document.getElementById("homeView"),
+      courseView: document.getElementById("courseView"),
+      playerView: document.getElementById("playerView"),
+      courseGrid: document.getElementById("courseGrid"),
+      homeLoading: document.getElementById("homeLoading"),
+      courseCount: document.getElementById("courseCount"),
+      searchInput: document.getElementById("searchInput"),
+      
+      backBtn: document.getElementById("backBtn"),
+      playerBackBtn: document.getElementById("playerBackBtn"),
+      closePlayerBtn: document.getElementById("closePlayerBtn"),
+
+      courseTitle: document.getElementById("courseTitle"),
+      courseSummary: document.getElementById("courseSummary"),
+      courseTags: document.getElementById("courseTags"),
+
+      lecturesTab: document.getElementById("lecturesTab"),
+      pdfTab: document.getElementById("pdfTab"),
+      lecturesSection: document.getElementById("lecturesSection"),
+      pdfSection: document.getElementById("pdfSection"),
+      
+      lectureList: document.getElementById("lectureList"),
+      pdfList: document.getElementById("pdfList"),
+      lectureCount: document.getElementById("lectureCount"),
+      pdfCount: document.getElementById("pdfCount"),
+
+      playerTitle: document.getElementById("playerTitle"),
+      playerSub: document.getElementById("playerSub"),
+      playerInfo: document.getElementById("playerInfo"),
+      playerEmpty: document.getElementById("playerEmpty"),
+      videoPlayer: document.getElementById("videoPlayer"),
+      ytPlayer: document.getElementById("ytPlayer"),
+      videoContainer: document.getElementById("videoContainer"),
+      customVideoControls: document.getElementById("customVideoControls"),
+      qualitySelect: document.getElementById("qualitySelect"),
+      speedSelect: document.getElementById("speedSelect"),
+      fullscreenBtn: document.getElementById("fullscreenBtn")
+    };
+
+    // --- Helpers ---
+
+    function cleanHTML(str) {
+      const div = document.createElement("div");
+      div.innerHTML = String(str || "");
+      return div.textContent.trim().replace(/\s+/g, " ");
+    }
+
+    function absoluteUrl(url) {
+      if (!url) return "";
+      const s = String(url).trim();
+      if (!s) return "";
+      if (s.startsWith("http://") || s.startsWith("https://")) return s;
+      if (s.startsWith("//")) return "https:" + s;
+      if (s.startsWith("/")) return "https://www.futurekul.com" + s;
+      return "https://www.futurekul.com/admin/" + s.replace(/^admin\//, "");
+    }
+
+    function getYoutubeEmbed(url) {
+      try {
+        const u = new URL(url);
+        if (u.hostname.includes("youtu.be")) {
+          const id = u.pathname.replace("/", "");
+          return `https://www.youtube.com/embed/${id}?autoplay=1&rel=0&color=white`;
+        }
+        if (u.hostname.includes("youtube.com")) {
+          const id = u.searchParams.get("v");
+          if (id) return `https://www.youtube.com/embed/${id}?autoplay=1&rel=0&color=white`;
+        }
+      } catch (e) {}
+      return url;
+    }
+
+    function uniqById(items) {
+      const map = new Map();
+      items.forEach(item => {
+        const key = String(item.id || item.class_id || item.pdf_id || Math.random());
+        if (!map.has(key)) map.set(key, item);
+      });
+      return [...map.values()];
+    }
+
+    function sortByPriority(a, b) {
+      const pa = Number(a.priority ?? a.raw?.priority ?? 9999);
+      const pb = Number(b.priority ?? b.raw?.priority ?? 9999);
+      return pa - pb;
+    }
+
+    // --- Normalizers ---
+
+    function normalizeCourse(c) {
+      return {
+        id: c.id || c.course_id || c.topic_id || "",
+        title: cleanHTML(c.title || c.course_name || c.name || "Untitled Course"),
+        banner: absoluteUrl(c.banner || c.image || c.image2 || c.banner_2 || c.banner_3 || c.banner_4 || c.banner_5 || ""),
+        price: c.price || c.discount_price || "",
+        discount_price: c.discount_price || "",
+        exams_covered: cleanHTML(c.exams_covered || ""),
+        language: cleanHTML(c.language || ""),
+        duration: cleanHTML(c.course_duration || ""),
+        validity: cleanHTML(c.validity || ""),
+        short_description: cleanHTML(c.short_description || ""),
+        raw: c
+      };
+    }
+
+    function normalizeLecture(item, fallbackTag = "") {
+      return {
+        id: item.id || item.class_id || Math.random().toString(36).slice(2),
+        title: cleanHTML(item.class_name || item.title || item.name || "Lecture"),
+        teacher: cleanHTML(item.teacher_name || item.teacher || ""),
+        subject: cleanHTML(item.custom_tag_1 || fallbackTag || ""),
+        link: absoluteUrl(item.link || item.video_link || item.url || ""),
+        thumb: absoluteUrl(item.banner || item.thumbnail || item.image || ""),
+        is_live: String(item.is_live || "0") === "1",
+        start_date: item.start_date || "",
+        priority: item.priority ?? 9999,
+        raw: item
+      };
+    }
+
+    function normalizePdf(item, fallbackTag = "") {
+      return {
+        id: item.id || item.pdf_id || Math.random().toString(36).slice(2),
+        title: cleanHTML(item.pdf_name || item.title || item.name || "PDF Document"),
+        teacher: cleanHTML(item.teacher_name || item.teacher || ""),
+        subject: cleanHTML(item.custom_tag_1 || fallbackTag || ""),
+        link: absoluteUrl(item.pdf_mobile || item.pdf_url || item.link || ""),
+      };
+    }
+
+    // --- UI State Management ---
+
+    function setActiveTab(which) {
+      const isLec = which === "lectures";
+      
+      // Update Tab Styles
+      el.lecturesTab.className = `tab-btn px-6 py-2.5 rounded-lg text-sm font-bold flex items-center gap-2 transition-all ${isLec ? 'bg-brand-500 text-neutral-950 shadow-md' : 'text-neutral-400 hover:text-white hover:bg-neutral-800'}`;
+      el.pdfTab.className = `tab-btn px-6 py-2.5 rounded-lg text-sm font-bold flex items-center gap-2 transition-all ${!isLec ? 'bg-brand-500 text-neutral-950 shadow-md' : 'text-neutral-400 hover:text-white hover:bg-neutral-800'}`;
+      
+      // Toggle Visibility
+      el.lecturesSection.classList.toggle("hidden", !isLec);
+      el.pdfSection.classList.toggle("hidden", isLec);
+    }
+
+    function showHome() {
+      el.homeView.classList.remove("hidden");
+      el.courseView.classList.add("hidden");
+      el.playerView.classList.add("hidden");
+      clearPlayer();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showCourse() {
+      el.homeView.classList.add("hidden");
+      el.courseView.classList.remove("hidden");
+      el.playerView.classList.add("hidden");
+      clearPlayer();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showPlayer() {
+      el.homeView.classList.add("hidden");
+      el.courseView.classList.add("hidden");
+      el.playerView.classList.remove("hidden");
+    }
+
+    function clearPlayer() {
+      if (state.currentHls) {
+        try { state.currentHls.destroy(); } catch (e) {}
+        state.currentHls = null;
+      }
+      el.videoPlayer.pause();
+      el.videoPlayer.removeAttribute("src");
+      el.videoPlayer.load();
+      el.ytPlayer.src = "";
+      
+      el.videoPlayer.classList.add("hidden");
+      el.ytPlayer.classList.add("hidden");
+      el.playerEmpty.classList.remove("hidden");
+      el.customVideoControls.classList.add("hidden");
+      
+      el.playerTitle.textContent = "Lecture";
+      el.playerSub.textContent = "Status";
+      el.playerInfo.textContent = "Select a lecture to begin playback.";
+    }
+
+    // --- Renders ---
+
+    function renderCourseCards(courses) {
+      el.courseGrid.innerHTML = "";
+
+      if (!courses.length) {
+        el.courseGrid.classList.remove("hidden");
+        el.courseGrid.innerHTML = `<div class="col-span-full py-12 flex flex-col items-center justify-center text-neutral-500"><i data-lucide="search-x" class="w-12 h-12 mb-4 opacity-50"></i><p>No courses found in the hive.</p></div>`;
+        el.courseCount.textContent = "0 courses";
+        lucide.createIcons();
+        return;
+      }
+
+      el.courseCount.textContent = `${courses.length} course${courses.length === 1 ? "" : "s"} available`;
+
+      courses.forEach((course, index) => {
+        const card = document.createElement("div");
+        card.className = "group cursor-pointer bg-neutral-900 border border-neutral-800 rounded-2xl overflow-hidden hover:border-brand-500/50 hover:shadow-[0_8px_30px_rgba(234,179,8,0.15)] transition-all duration-300 flex flex-col h-full animate-card";
+        card.style.animationDelay = `${index * 50}ms`;
+
+        card.innerHTML = `
+          <div class="relative aspect-[16/10] overflow-hidden bg-neutral-950">
+            <img src="${course.banner || IMG_FALLBACK}" alt="${course.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" onerror="this.src='${IMG_FALLBACK}'">
+            <div class="absolute inset-0 bg-gradient-to-t from-neutral-900 to-transparent opacity-80"></div>
+          </div>
+          <div class="p-5 flex flex-col flex-grow">
+            <h3 class="text-lg font-bold text-white mb-2 line-clamp-2 leading-snug group-hover:text-brand-400 transition-colors">${course.title}</h3>
+            <p class="text-xs text-neutral-400 line-clamp-2 mb-4 flex-grow">${course.exams_covered || course.short_description || "Premium study material by Study Bee."}</p>
+            
+            <div class="pt-4 border-t border-neutral-800/50 flex items-center justify-between mt-auto">
+              <div class="font-bold text-brand-500 text-lg flex items-baseline">
+                <span class="px-2.5 py-1 bg-brand-500/10 text-brand-500 text-[11px] font-black uppercase tracking-wider rounded border border-brand-500/20 flex items-center gap-1.5"><i data-lucide="unlock" class="w-3.5 h-3.5"></i> Free Access</span>
+              </div>
+              <div class="w-8 h-8 rounded-full bg-neutral-800 flex items-center justify-center text-white group-hover:bg-brand-500 group-hover:text-neutral-950 transition-colors shadow-lg">
+                 <i data-lucide="play" class="w-4 h-4 ml-0.5"></i>
+              </div>
+            </div>
+          </div>
+        `;
+        
+        card.addEventListener("click", () => openCourse(course));
+        el.courseGrid.appendChild(card);
+      });
+
+      el.courseGrid.classList.remove("hidden");
+      lucide.createIcons();
+    }
+
+    function renderLectures(list) {
+      el.lectureList.innerHTML = "";
+      el.lectureCount.textContent = `${list.length} item${list.length === 1 ? "" : "s"}`;
+
+      if (!list.length) {
+        el.lectureList.innerHTML = `<div class="col-span-full py-8 text-center text-neutral-500 bg-neutral-900/30 rounded-xl border border-neutral-800/50">No lectures populated yet.</div>`;
+        return;
+      }
+
+      list.sort(sortByPriority).forEach((item, index) => {
+        const card = document.createElement("div");
+        card.className = "group cursor-pointer bg-neutral-900/50 border border-neutral-800 rounded-2xl overflow-hidden hover:border-brand-500/40 hover:bg-neutral-800 transition-all duration-200 animate-card";
+        card.style.animationDelay = `${index * 30}ms`;
+        
+        const badge = item.is_live 
+            ? `<span class="px-2.5 py-1 bg-red-500/10 text-red-500 text-[10px] font-black uppercase tracking-wider rounded border border-red-500/20 flex items-center gap-1 w-max"><i data-lucide="radio" class="w-3 h-3"></i> Live</span>`
+            : `<span class="px-2.5 py-1 bg-brand-500/10 text-brand-500 text-[10px] font-black uppercase tracking-wider rounded border border-brand-500/20 flex items-center gap-1 w-max"><i data-lucide="play" class="w-3 h-3"></i> Recorded</span>`;
+
+        card.innerHTML = `
+          <div class="relative aspect-video bg-neutral-950 overflow-hidden">
+            ${item.thumb ? `<img src="${item.thumb}" class="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity duration-300" onerror="this.style.display='none'">` : ''}
+            <div class="absolute inset-0 bg-gradient-to-t from-neutral-900 via-neutral-900/20 to-transparent"></div>
+            
+            <!-- Play overlay -->
+            <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 scale-90 group-hover:scale-100">
+               <div class="w-12 h-12 bg-brand-500 rounded-full flex items-center justify-center text-neutral-950 shadow-[0_0_20px_rgba(234,179,8,0.4)]">
+                 <i data-lucide="play" class="w-5 h-5 ml-1"></i>
+               </div>
+            </div>
+            
+            <div class="absolute bottom-3 left-3 flex gap-2">
+               ${badge}
+            </div>
+          </div>
+          <div class="p-4">
+            <h3 class="font-bold text-white text-sm line-clamp-2 mb-2 group-hover:text-brand-400 transition-colors leading-snug">${item.title}</h3>
+            <p class="text-xs text-neutral-400 truncate">${item.teacher || "Study Bee Instructor"} ${item.subject ? `• ${item.subject}` : ""}</p>
+          </div>
+        `;
+        card.addEventListener("click", () => openLecture(item));
+        el.lectureList.appendChild(card);
+      });
+
+      lucide.createIcons();
+    }
+
+    function renderPdfs(apiPdfTopics) {
+      el.pdfList.innerHTML = "";
+
+      const flattened = [];
+      apiPdfTopics.forEach(topic => {
+        const topicName = cleanHTML(topic.topic_name || topic.topic || "Study Materials");
+        const arr = Array.isArray(topic.pdf) ? topic.pdf : [];
+        arr.forEach(pdf => flattened.push(normalizePdf(pdf, topicName)));
+      });
+
+      const pdfs = uniqById(flattened);
+      el.pdfCount.textContent = `${pdfs.length} file${pdfs.length === 1 ? "" : "s"}`;
+
+      if (!pdfs.length) {
+        el.pdfList.innerHTML = `<div class="col-span-full py-8 text-center text-neutral-500 bg-neutral-900/30 rounded-xl border border-neutral-800/50">No PDF materials found.</div>`;
+        return;
+      }
+
+      pdfs.forEach((item, index) => {
+        const card = document.createElement("div");
+        card.className = "group cursor-pointer p-4 bg-neutral-900/50 border border-neutral-800 rounded-2xl hover:border-brand-500/40 hover:bg-neutral-800 transition-all flex items-center gap-4 animate-card";
+        card.style.animationDelay = `${index * 30}ms`;
+        
+        card.innerHTML = `
+          <div class="w-12 h-12 rounded-xl bg-red-500/10 text-red-500 flex items-center justify-center shrink-0 group-hover:bg-red-500 group-hover:text-white transition-colors">
+             <i data-lucide="file-text" class="w-6 h-6"></i>
+          </div>
+          <div class="flex-1 min-w-0">
+             <h4 class="font-bold text-sm text-white truncate group-hover:text-brand-400 transition-colors">${item.title}</h4>
+             <div class="flex items-center gap-3 text-xs text-neutral-400 mt-1">
+                ${item.teacher ? `<span class="flex items-center gap-1"><i data-lucide="user" class="w-3 h-3"></i> ${item.teacher}</span>` : ""}
+                ${item.subject ? `<span class="flex items-center gap-1"><i data-lucide="tag" class="w-3 h-3"></i> ${item.subject}</span>` : ""}
+             </div>
+          </div>
+          <div class="shrink-0 w-8 h-8 rounded-full border border-neutral-700 flex items-center justify-center text-neutral-400 group-hover:border-brand-500 group-hover:text-brand-500">
+             <i data-lucide="download" class="w-4 h-4"></i>
+          </div>
+        `;
+        
+        card.addEventListener("click", () => {
+          if (item.link) window.open(item.link, "_blank", "noopener,noreferrer");
+        });
+        el.pdfList.appendChild(card);
+      });
+
+      lucide.createIcons();
+    }
+
+    function openLecture(lecture) {
+      state.currentLecture = lecture;
+      showPlayer();
+      clearPlayer();
+
+      el.playerTitle.textContent = lecture.title || "Lecture";
+      el.playerSub.textContent = [lecture.teacher || "Study Bee", lecture.subject || ""].filter(Boolean).join(" • ");
+      el.playerInfo.textContent = lecture.link ? "Loading secure video stream..." : "Media source not available.";
+
+      const link = lecture.link || "";
+      if (!link) {
+         el.playerEmpty.innerHTML = `<i data-lucide="video-off" class="w-12 h-12 mb-4 text-neutral-600"></i><p>No valid video link found.</p>`;
+         lucide.createIcons();
+         return;
+      }
+
+      // Handle Youtube
+      if (/youtube\.com|youtu\.be/.test(link)) {
+        el.playerEmpty.classList.add("hidden");
+        el.ytPlayer.classList.remove("hidden");
+        el.ytPlayer.src = getYoutubeEmbed(link);
+        el.playerInfo.textContent = "YouTube playback active.";
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+
+      // Handle direct video / HLS
+      const source = absoluteUrl(link);
+      el.playerEmpty.classList.add("hidden");
+      el.videoPlayer.classList.remove("hidden");
+      el.customVideoControls.classList.remove("hidden");
+
+      // Reset settings
+      el.speedSelect.value = "1";
+      el.videoPlayer.playbackRate = 1;
+      el.qualitySelect.innerHTML = '<option value="-1">Auto Quality</option>';
+
+      if (window.Hls && Hls.isSupported() && source.includes(".m3u8")) {
+        state.currentHls = new Hls();
+        state.currentHls.loadSource(source);
+        state.currentHls.attachMedia(el.videoPlayer);
+        state.currentHls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
+          // Populate Quality Select
+          data.levels.forEach((level, i) => {
+            const option = document.createElement('option');
+            option.value = i;
+            option.text = level.height ? `${level.height}p` : `Level ${i}`;
+            el.qualitySelect.appendChild(option);
+          });
+          el.videoPlayer.play().catch(() => console.warn("Auto-play prevented."));
+        });
+        // Error handling for HLS
+        state.currentHls.on(Hls.Events.ERROR, function (event, data) {
+          if (data.fatal) {
+            console.error("HLS Error:", data);
+            el.playerInfo.textContent = "Stream error encountered. Please try refreshing.";
+          }
+        });
+      } else {
+        el.videoPlayer.src = source;
+        el.videoPlayer.play().catch(() => console.warn("Auto-play prevented."));
+      }
+
+      el.playerInfo.textContent = lecture.subject ? `Currently viewing: ${lecture.subject}` : "Stream is live.";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function openCourse(course) {
+      state.currentCourse = course;
+      showCourse();
+
+      el.courseTitle.textContent = course.title || "Course Details";
+      
+      // Build tags
+      const tags = [];
+      const tagClasses = "px-3 py-1 bg-neutral-800 text-neutral-300 rounded-md text-xs font-semibold flex items-center gap-1.5 border border-neutral-700/50";
+      
+      if (course.exams_covered) tags.push(`<span class="${tagClasses}"><i data-lucide="book-open" class="w-3.5 h-3.5"></i> ${course.exams_covered}</span>`);
+      if (course.language) tags.push(`<span class="${tagClasses}"><i data-lucide="languages" class="w-3.5 h-3.5"></i> ${course.language}</span>`);
+      if (course.duration) tags.push(`<span class="${tagClasses}"><i data-lucide="clock-3" class="w-3.5 h-3.5"></i> ${course.duration}</span>`);
+      
+      el.courseTags.innerHTML = tags.join("");
+      
+      const summaryParts = [course.exams_covered, course.language, course.duration, course.validity].filter(Boolean);
+      el.courseSummary.textContent = summaryParts.join(" • ") || "Premium content unlocked for this hive.";
+
+      lucide.createIcons();
+
+      el.lectureList.innerHTML = `<div class="col-span-full flex flex-col items-center justify-center py-12 text-brand-500"><i data-lucide="loader-2" class="w-8 h-8 animate-spin mb-3"></i><p class="text-sm text-neutral-400">Loading curriculum...</p></div>`;
+      el.pdfList.innerHTML = `<div class="col-span-full flex flex-col items-center justify-center py-12 text-brand-500"><i data-lucide="loader-2" class="w-8 h-8 animate-spin mb-3"></i><p class="text-sm text-neutral-400">Loading PDFs...</p></div>`;
+      
+      setActiveTab("lectures");
+
+      // Fetch course data
+      fetch(COURSE_DATA_API(course.id))
+        .then(r => r.json())
+        .then(json => {
+          const data = json?.data || {};
+          const lectures = [];
+          
+          if (Array.isArray(data.free_class)) {
+            data.free_class.forEach(x => lectures.push(normalizeLecture(x, "Preview Class")));
+          }
+          if (Array.isArray(data.paid_class)) {
+            data.paid_class.forEach(topic => {
+              const topicName = cleanHTML(topic.topic || topic.topic_name || "Lectures");
+              const arr = Array.isArray(topic.class) ? topic.class : Array.isArray(topic.classes) ? topic.classes : [];
+              arr.forEach(x => lectures.push(normalizeLecture(x, topicName)));
+            });
+          }
+
+          const pdfTopics = Array.isArray(data.pdf) ? data.pdf : [];
+          
+          state.currentLectures = uniqById(lectures);
+          state.currentPdfTopics = pdfTopics;
+
+          renderLectures(state.currentLectures);
+          renderPdfs(state.currentPdfTopics);
+        })
+        .catch(err => {
+          console.error(err);
+          el.lectureList.innerHTML = `<div class="col-span-full py-6 text-center text-red-400 bg-red-500/10 border border-red-500/20 rounded-xl">Failed to load lectures</div>`;
+          el.pdfList.innerHTML = `<div class="col-span-full py-6 text-center text-red-400 bg-red-500/10 border border-red-500/20 rounded-xl">Failed to load PDFs</div>`;
+        });
+    }
+
+    // --- Search & Initialization ---
+
+    function filterCourses(q) {
+      const query = q.trim().toLowerCase();
+      if (!query) return state.allCourses.slice();
+      return state.allCourses.filter(c => {
+        const text = [
+          c.title,
+          c.exams_covered,
+          c.language,
+          c.duration,
+          c.short_description
+        ].join(" ").toLowerCase();
+        return text.includes(query);
+      });
+    }
+
+    async function loadCourses() {
+      el.homeLoading.classList.remove("hidden");
+      el.courseGrid.classList.add("hidden");
+
+      try {
+        const [r1, r2] = await Promise.all([fetch(COURSE_API_1), fetch(COURSE_API_2)]);
+        const [j1, j2] = await Promise.all([r1.json(), r2.json()]);
+
+        const list1 = Array.isArray(j1?.data) ? j1.data : [];
+        const list2 = Array.isArray(j2?.data) ? j2.data : [];
+
+        const merged = uniqById([...list1, ...list2]).map(normalizeCourse);
+
+        state.allCourses = merged;
+        state.filteredCourses = merged.slice();
+
+        el.homeLoading.classList.add("hidden");
+        renderCourseCards(state.filteredCourses);
+      } catch (err) {
+        console.error(err);
+        el.homeLoading.innerHTML = `<div class="text-red-400 flex flex-col items-center gap-3"><i data-lucide="alert-circle" class="w-10 h-10"></i> Failed to connect to the hive. Please refresh.</div>`;
+        lucide.createIcons();
+      }
+    }
+
+    // Event Listeners
+    el.searchInput.addEventListener("input", (e) => {
+      state.filteredCourses = filterCourses(e.target.value);
+      renderCourseCards(state.filteredCourses);
+    });
+
+    el.backBtn.addEventListener("click", showHome);
+    el.playerBackBtn.addEventListener("click", showCourse);
+    el.closePlayerBtn.addEventListener("click", showCourse);
+    
+    el.lecturesTab.addEventListener("click", () => setActiveTab("lectures"));
+    el.pdfTab.addEventListener("click", () => setActiveTab("pdfs"));
+
+    // Video Player Custom Controls
+    el.speedSelect.addEventListener("change", (e) => {
+      el.videoPlayer.playbackRate = parseFloat(e.target.value);
+    });
+
+    el.qualitySelect.addEventListener("change", (e) => {
+      if (state.currentHls) {
+        state.currentHls.currentLevel = parseInt(e.target.value);
+      }
+    });
+
+    el.fullscreenBtn.addEventListener("click", () => {
+      const video = el.videoPlayer;
+      if (!document.fullscreenElement) {
+        if (video.requestFullscreen) {
+          video.requestFullscreen().catch(err => console.error(err));
+        } else if (video.webkitRequestFullscreen) { // Safari
+          video.webkitRequestFullscreen();
+        } else if (video.msRequestFullscreen) { // IE11
+          video.msRequestFullscreen();
+        }
+        
+        // Lock to landscape if supported on mobile
+        if (screen.orientation && screen.orientation.lock) {
+          screen.orientation.lock('landscape').catch(() => console.log("Orientation lock not supported."));
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+    });
+
+    window.addEventListener("beforeunload", () => {
+      if (state.currentHls) {
+        try { state.currentHls.destroy(); } catch (e) {}
+      }
+    });
+
+    // Start App
+    loadCourses();
+
+  </script>
+</body>
+</html>
